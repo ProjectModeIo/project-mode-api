@@ -30,6 +30,7 @@ defmodule PmApiWeb.Router do
     post "/sessions", SessionController, :create #login
     # get "/sessions/current", SessionController, :current #get current user
     resources "/users", UserController, only: [:create]
+    resources "/projects", ProjectController, only: [:index, :show]
     resources "/roles", RoleController, only: [:index, :show]
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
@@ -38,13 +39,22 @@ defmodule PmApiWeb.Router do
   scope "/api/v1", PmApiWeb do
     pipe_through [:api, :api_auth]
 
+    #session
     delete "/sessions", SessionController, :delete
     post "/sessions/refresh", SessionController, :refresh
     patch "/users/update", UserController, :update
-    resources "/users", UserController, only: [:show, :delete]
 
+    #user
+    resources "/users", UserController, only: [:show, :delete]
     resources "/userroles", UserroleController, only: [:create, :delete]
     resources "/userskills", UserskillController, only: [:create, :delete]
     resources "/userinterests", UserinterestController, only: [:create, :delete]
+
+    #project
+    get "/projectslug/:slug", ProjectController, :showslug
+    resources "/projects", ProjectController, only: [:create, :delete, :update]
+    resources "/projectroles", ProjectroleController, only: [:create, :delete]
+    resources "/projectstacks", ProjectstackController, only: [:create, :delete]
+    resources "/projectcategories", ProjectcategoryController, only: [:create, :delete]
   end
 end

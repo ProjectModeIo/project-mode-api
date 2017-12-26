@@ -13,11 +13,15 @@ defmodule PmApiWeb.UserView do
 
   def render("user.json", %{user: user}) do
     # IEx.pry
+    user = user |> PmApi.Repo.preload([:projects, :userroles, :userinterests, :userskills])
     %{id: user.id,
+      username: user.username,
       email: user.email,
       firstname: user.firstname,
       lastname: user.lastname,
       tagline: user.tagline,
+      created_projects: render_many(user.projects, PmApiWeb.ProjectView, "project.json"),
+
       roles: render_many(user.userroles, PmApiWeb.UserroleView, "userrole.json"),
       # roles: render_many(user.roles, PmApiWeb.RoleView, "role.json"),
       skills: render_many(user.userskills, PmApiWeb.UserskillView, "userskill.json"),

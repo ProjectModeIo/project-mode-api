@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApi.Projectmode do
   @moduledoc """
   The Projectmode context.
@@ -32,23 +33,18 @@ defmodule PmApi.Projectmode do
 
   def list_users do
     users = Repo.all(User)
-    |> Repo.preload([:userroles, :userskills, :userinterests])
-    # Repo.all from user in User,
-    #   left_join: r in assoc(user, :roles),
-    #   left_join: s in assoc(user, :skills),
-    #   preload: [roles: r, skills: s]
-    # Repo.all(User)
+    # |> Repo.preload([:userroles, :userskills, :userinterests])
   end
 
   def get_user!(id) do
     user = Repo.get!(User, id)
     # |> Repo.preload([:roles, :skills])
-    |> Repo.preload([:userroles, :userskills, :userinterests])
+    # |> Repo.preload([:userroles, :userskills, :userinterests])
   end
 
   def get_user_by(paramsObj) do
     user = Repo.get_by(User, paramsObj)
-    |> Repo.preload([:roles, :skills])
+    # |> Repo.preload([:userroles, :userskills, :userinterests])
   end
 
   def create_user(attrs \\ %{}) do
@@ -77,7 +73,19 @@ defmodule PmApi.Projectmode do
     Repo.all(Project)
   end
 
-  def get_project!(id), do: Repo.get!(Project, id)
+  def get_project!(id) do
+    project = Repo.get!(Project, id)
+    |> Repo.preload([:user])
+  end
+
+  def get_project_by_slug(slug) do
+    project = Repo.get_by(Project, %{slug: slug})
+    |> Repo.preload([:user])
+  end
+
+  def verify_project_owner(%Project{} = project, %User{} = user) do
+    to_string(project.user.id) == to_string(user.id)
+  end
 
   def create_project(attrs \\ %{}) do
     %Project{}
@@ -220,11 +228,6 @@ defmodule PmApi.Projectmode do
 
   alias PmApi.Projectmode.Userrole
 
-  def list_userroles do
-    userroles = Repo.all(Userrole)
-    |> Repo.preload([:role])
-  end
-
   def get_userrole!(id), do: Repo.get!(Userrole, id)
 
   def create_userrole(attrs \\ %{}) do
@@ -233,18 +236,8 @@ defmodule PmApi.Projectmode do
     |> Repo.insert()
   end
 
-  def update_userrole(%Userrole{} = userrole, attrs) do
-    userrole
-    |> Userrole.changeset(attrs)
-    |> Repo.update()
-  end
-
   def delete_userrole(%Userrole{} = userrole) do
     Repo.delete(userrole)
-  end
-
-  def change_userrole(%Userrole{} = userrole) do
-    Userrole.changeset(userrole, %{})
   end
 
   alias PmApi.Projectmode.Skill
@@ -312,11 +305,6 @@ defmodule PmApi.Projectmode do
 
   alias PmApi.Projectmode.Userskill
 
-  def list_userskills do
-    users = Repo.all(Userskill)
-    |> Repo.preload([:skill])
-  end
-
   def get_userskill!(id), do: Repo.get!(Userskill, id)
 
   def create_userskill(attrs \\ %{}) do
@@ -325,18 +313,8 @@ defmodule PmApi.Projectmode do
     |> Repo.insert()
   end
 
-  def update_userskill(%Userskill{} = userskill, attrs) do
-    userskill
-    |> Userskill.changeset(attrs)
-    |> Repo.update()
-  end
-
   def delete_userskill(%Userskill{} = userskill) do
     Repo.delete(userskill)
-  end
-
-  def change_userskill(%Userskill{} = userskill) do
-    Userskill.changeset(userskill, %{})
   end
 
   alias PmApi.Projectmode.Interest
@@ -376,11 +354,6 @@ defmodule PmApi.Projectmode do
 
   alias PmApi.Projectmode.Userinterest
 
-  def list_userinterests do
-    userinterests = Repo.all(Userinterest)
-    |> Repo.preload([:interest])
-  end
-
   def get_userinterest!(id), do: Repo.get!(Userinterest, id)
 
   def create_userinterest(attrs \\ %{}) do
@@ -389,18 +362,8 @@ defmodule PmApi.Projectmode do
     |> Repo.insert()
   end
 
-  def update_userinterest(%Userinterest{} = userinterest, attrs) do
-    userinterest
-    |> Userinterest.changeset(attrs)
-    |> Repo.update()
-  end
-
   def delete_userinterest(%Userinterest{} = userinterest) do
     Repo.delete(userinterest)
-  end
-
-  def change_userinterest(%Userinterest{} = userinterest) do
-    Userinterest.changeset(userinterest, %{})
   end
 
   alias PmApi.Projectmode.Projectstack
@@ -485,5 +448,33 @@ defmodule PmApi.Projectmode do
 
   def change_watchedproject(%Watchedproject{} = watchedproject) do
     Watchedproject.changeset(watchedproject, %{})
+  end
+
+  alias PmApi.Projectmode.Comment
+
+  def list_comments do
+    Repo.all(Comment)
+  end
+
+  def get_comment!(id), do: Repo.get!(Comment, id)
+
+  def create_comment(attrs \\ %{}) do
+    %Comment{}
+    |> Comment.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_comment(%Comment{} = comment, attrs) do
+    comment
+    |> Comment.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_comment(%Comment{} = comment) do
+    Repo.delete(comment)
+  end
+
+  def change_comment(%Comment{} = comment) do
+    Comment.changeset(comment, %{})
   end
 end

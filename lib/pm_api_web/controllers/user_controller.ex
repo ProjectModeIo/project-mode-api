@@ -16,10 +16,9 @@ defmodule PmApiWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     # changeset = User.registration_changeset(%User{}, user_params)
-
     case Projectmode.create_user(user_params) do
       {:ok, user} ->
-        user = user |> PmApi.Repo.preload([:userroles, :userskills, :userinterests])
+        # user = user |> PmApi.Repo.preload([:userroles, :userskills, :userinterests])
         new_conn = Guardian.Plug.sign_in(conn, user)
         jwt = Guardian.Plug.current_token(new_conn)
 

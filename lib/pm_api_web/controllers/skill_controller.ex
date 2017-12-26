@@ -24,19 +24,19 @@ defmodule PmApiWeb.SkillController do
     skills = Projectmode.get_skills!(id)
     render(conn, "show.json", skills: skills)
   end
-
-  def update(conn, %{"id" => id, "skills" => skills_params}) do
-    skills = Projectmode.get_skills!(id)
-
-    with {:ok, %Skill{} = skills} <- Projectmode.update_skills(skills, skills_params) do
-      render(conn, "show.json", skills: skills)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    skills = Projectmode.get_skills!(id)
-    with {:ok, %Skill{}} <- Projectmode.delete_skills(skills) do
-      send_resp(conn, :no_content, "")
-    end
-  end
+  #
+  # def update(conn, %{"id" => id, "skills" => skills_params}) do
+  #   skills = Projectmode.get_skills!(id)
+  #
+  #   with {:ok, %Skill{} = skills} <- Projectmode.update_skills(skills, skills_params) do
+  #     render(conn, "show.json", skills: skills)
+  #   end
+  # end
+  #
+  # def delete(conn, %{"id" => id}) do
+  #   skills = Projectmode.get_skills!(id)
+  #   with {:ok, %Skill{}} <- Projectmode.delete_skills(skills) do
+  #     send_resp(conn, :no_content, "")
+  #   end
+  # end
 end

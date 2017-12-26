@@ -1,6 +1,5 @@
 defmodule PmApiWeb.SessionView do
   use PmApiWeb, :view
-  alias PmApiWeb.SessionView
 
   def render("show.json", %{user: user, jwt: jwt}) do
     %{

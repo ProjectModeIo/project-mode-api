@@ -5,16 +5,18 @@ defmodule PmApi.Projectmode.Projectrole do
 
 
   schema "projectroles" do
-    field :project_id, :id
-    field :role_id, :id
-
+    # field :project_id, :id
+    # field :role_id, :id
+    belongs_to :project, PmApi.Projectmode.Project
+    belongs_to :role, PmApi.Projectmode.Role
     timestamps()
   end
 
   @doc false
   def changeset(%Projectrole{} = projectrole, attrs) do
     projectrole
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:project_id, :role_id])
+    |> validate_required([:project_id, :role_id])
+    |> unique_constraint(:project_id_role_id)
   end
 end

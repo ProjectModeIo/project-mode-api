@@ -11,8 +11,14 @@ defmodule PmApiWeb.ProjectView do
   end
 
   def render("project.json", %{project: project}) do
-    %{id: project.id,
+    project = project|> PmApi.Repo.preload([:user, :projectroles])
+    %{
+      id: project.id,
       title: project.title,
-      description: project.description}
+      description: project.description,
+      created_by: project.user.username,
+      slug: project.slug,
+      roles: render_many(project.projectroles, PmApiWeb.ProjectroleView, "projectrole.json"),
+    }
   end
 end

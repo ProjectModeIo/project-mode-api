@@ -8,20 +8,17 @@ defmodule PmApiWeb.UserskillController do
 
   action_fallback PmApiWeb.FallbackController
 
-  def index(conn, _params) do
-    userskills = Projectmode.list_userskills()
-    render(conn, "index.json", userskills: userskills)
-  end
+  # def index(conn, _params) do
+  #   userskills = Projectmode.list_userskills()
+  #   render(conn, "index.json", userskills: userskills)
+  # end
 
   def create(conn, params) do
-    # IEx.pry
     case PmApiWeb.SessionController.get_logged_in_user(conn) do
       {:ok, current_user} ->
         with {:ok, %Skill{} = skill } <- Projectmode.find_or_create_skill_by(%{name: params["name"]}) do
-          # IEx.pry
           with {:ok, %Userskill{} = userskill } <- Projectmode.create_userskill(%{user_id: current_user.id, skill_id: skill.id}) do
             userskill = userskill |> PmApi.Repo.preload([:skill])
-            # IEx.pry
             conn
             |> put_status(:created)
             |> render("show.json", userskill: userskill)
@@ -38,13 +35,13 @@ defmodule PmApiWeb.UserskillController do
   #   render(conn, "show.json", userskill: userskill)
   # end
 
-  def update(conn, %{"id" => id, "userskill" => userskill_params}) do
-    userskill = Projectmode.get_userskill!(id)
-
-    with {:ok, %Userskill{} = userskill} <- Projectmode.update_userskill(userskill, userskill_params) do
-      render(conn, "show.json", userskill: userskill)
-    end
-  end
+  # def update(conn, %{"id" => id, "userskill" => userskill_params}) do
+  #   userskill = Projectmode.get_userskill!(id)
+  #
+  #   with {:ok, %Userskill{} = userskill} <- Projectmode.update_userskill(userskill, userskill_params) do
+  #     render(conn, "show.json", userskill: userskill)
+  #   end
+  # end
 
   def delete(conn, %{"id" => id}) do
     userskill = Projectmode.get_userskill!(id)

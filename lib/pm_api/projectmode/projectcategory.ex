@@ -5,16 +5,18 @@ defmodule PmApi.Projectmode.Projectcategory do
 
 
   schema "projectcategories" do
-    field :project_id, :id
-    field :interest_id, :id
-
+    # field :project_id, :id
+    # field :interest_id, :id
+    belongs_to :project, PmApi.Projectmode.Project
+    belongs_to :interest, PmApi.Projectmode.Interest
     timestamps()
   end
 
   @doc false
   def changeset(%Projectcategory{} = projectcategory, attrs) do
     projectcategory
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:project_id, :interest_id])
+    |> validate_required([:project_id, :interest_id])
+    |> unique_constraint(:project_id_interest_id)
   end
 end

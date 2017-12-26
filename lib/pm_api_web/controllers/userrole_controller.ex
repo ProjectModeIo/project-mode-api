@@ -10,10 +10,10 @@ defmodule PmApiWeb.UserroleController do
 
   action_fallback PmApiWeb.FallbackController
 
-  def index(conn, _params) do
-    userroles = Projectmode.list_userroles()
-    render(conn, "index.json", userroles: userroles)
-  end
+  # def index(conn, _params) do
+  #   userroles = Projectmode.list_userroles()
+  #   render(conn, "index.json", userroles: userroles)
+  # end
 
   # def create(conn, params) do
   #   case PmApiWeb.SessionController.get_logged_in_user(conn) do
@@ -51,18 +51,18 @@ defmodule PmApiWeb.UserroleController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    userrole = Projectmode.get_userrole!(id)
-    render(conn, "show.json", userrole: userrole)
-  end
-
-  def update(conn, %{"id" => id, "userrole" => userrole_params}) do
-    userrole = Projectmode.get_userrole!(id)
-
-    with {:ok, %Userrole{} = userrole} <- Projectmode.update_userrole(userrole, userrole_params) do
-      render(conn, "show.json", userrole: userrole)
-    end
-  end
+  # def show(conn, %{"id" => id}) do
+  #   userrole = Projectmode.get_userrole!(id)
+  #   render(conn, "show.json", userrole: userrole)
+  # end
+  #
+  # def update(conn, %{"id" => id, "userrole" => userrole_params}) do
+  #   userrole = Projectmode.get_userrole!(id)
+  #
+  #   with {:ok, %Userrole{} = userrole} <- Projectmode.update_userrole(userrole, userrole_params) do
+  #     render(conn, "show.json", userrole: userrole)
+  #   end
+  # end
 
   def delete(conn, %{"id" => id}) do
     userrole = Projectmode.get_userrole!(id)
