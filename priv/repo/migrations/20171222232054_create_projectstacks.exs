@@ -3,8 +3,8 @@ defmodule PmApi.Repo.Migrations.CreateProjectstacks do
 
   def change do
     create table(:projectstacks) do
-      add :project_id, references(:projects, on_delete: :nothing)
-      add :skill_id, references(:skills, on_delete: :nothing)
+      add :project_id, references(:projects, on_delete: :delete_all)
+      add :skill_id, references(:skills, on_delete: :delete_all)
 
       timestamps()
     end

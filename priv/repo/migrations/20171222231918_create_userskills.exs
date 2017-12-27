@@ -3,8 +3,8 @@ defmodule PmApi.Repo.Migrations.CreateUserskills do
 
   def change do
     create table(:userskills) do
-      add :user_id, references(:users, on_delete: :nothing)
-      add :skill_id, references(:skills, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :skill_id, references(:skills, on_delete: :delete_all)
 
       timestamps()
     end

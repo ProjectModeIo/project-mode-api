@@ -3,9 +3,10 @@ defmodule PmApi.Repo.Migrations.CreateProjectroles do
 
   def change do
     create table(:projectroles) do
-      add :project_id, references(:projects, on_delete: :nothing)
-      add :role_id, references(:roles, on_delete: :nothing)
-
+      add :project_id, references(:projects, on_delete: :delete_all)
+      add :role_id, references(:roles, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :nothing)
+      
       timestamps()
     end
 
