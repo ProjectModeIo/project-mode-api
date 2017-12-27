@@ -12,6 +12,8 @@ defmodule PmApi.Projectmode.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :tagline, :string
+    field :contact_info, :string
+    
     has_many :userroles, PmApi.Projectmode.Userrole
     has_many :userskills, PmApi.Projectmode.Userskill
     has_many :userinterests, PmApi.Projectmode.Userinterest

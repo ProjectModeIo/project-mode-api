@@ -9,6 +9,8 @@ defmodule PmApi.Projectmode.Project do
     field :description, :string
     field :title, :string
     field :slug, :string
+    field :project_scope, :string
+    field :active, :boolean
     # field :user_id, :id
 
     belongs_to :user, PmApi.Projectmode.User, foreign_key: :user_id
@@ -23,7 +25,7 @@ defmodule PmApi.Projectmode.Project do
   @doc false
   def changeset(%Project{} = project, attrs) do
     project
-    |> cast(attrs, [:title, :description, :user_id])
+    |> cast(attrs, [:title, :description, :user_id, :project_scope, :active])
     |> validate_required([:title, :description, :user_id])
     |> validate_exclusion(:title, ~w(profile edit new delete dashboard))
     |> create_slug_from_title()

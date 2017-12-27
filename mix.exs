@@ -26,7 +26,8 @@ defmodule PmApi.Mixfile do
       extra_applications: [
         :logger,
         :runtime_tools,
-        :comeonin]
+        :comeonin,
+        :httpotion]
     ]
   end
 
@@ -49,7 +50,8 @@ defmodule PmApi.Mixfile do
       {:cowboy, "~> 1.0"},
       {:comeonin, "~> 2.5"},
       {:guardian, "~> 1.0"},
-      {:cors_plug, "~> 1.1"}
+      {:cors_plug, "~> 1.1"},
+      {:httpotion, "~> 3.0.2"}
     ]
   end
 
