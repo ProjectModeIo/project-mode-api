@@ -11,6 +11,10 @@ defmodule PmApiWeb.ProjectcategoryView do
   end
 
   def render("projectcategory.json", %{projectcategory: projectcategory}) do
-    %{id: projectcategory.id}
+    projectcategory = projectcategory |> PmApi.Repo.preload([:interest])
+    %{
+      id: projectcategory.id,
+      name: projectcategory.interest.name
+    }
   end
 end

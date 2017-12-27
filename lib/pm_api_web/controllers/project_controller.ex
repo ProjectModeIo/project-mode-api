@@ -8,7 +8,9 @@ defmodule PmApiWeb.ProjectController do
   action_fallback PmApiWeb.FallbackController
 
   def index(conn, _params) do
+
     projects = Projectmode.list_projects()
+
     render(conn, "index.json", projects: projects)
   end
 

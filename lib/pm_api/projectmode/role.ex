@@ -6,6 +6,8 @@ defmodule PmApi.Projectmode.Role do
 
   schema "roles" do
     field :type, :string
+    has_many :userroles, PmApi.Projectmode.Userrole
+    has_many :projectroles, PmApi.Projectmode.Projectrole
     # many_to_many :users, PmApi.Projectmode.User, join_through: "userroles"
 
     timestamps()

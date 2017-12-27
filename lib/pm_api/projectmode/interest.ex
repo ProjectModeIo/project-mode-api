@@ -6,7 +6,8 @@ defmodule PmApi.Projectmode.Interest do
 
   schema "interests" do
     field :name, :string
-
+    has_many :userinterests, PmApi.Projectmode.Userinterest
+    has_many :projectcategories, PmApi.Projectmode.Projectcategory
     timestamps()
   end
 

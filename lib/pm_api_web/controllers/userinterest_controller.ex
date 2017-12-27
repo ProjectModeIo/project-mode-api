@@ -12,15 +12,15 @@ defmodule PmApiWeb.UserinterestController do
   #   render(conn, "index.json", userinterests: userinterests)
   # end
 
-  def create(conn, params) do
+  def create(conn, %{"name" => name}) do
     case PmApiWeb.SessionController.get_logged_in_user(conn) do
       {:ok, current_user} ->
-        with {:ok, %Interest{} = interest } <- Projectmode.find_or_create_interest_by(%{name: params["name"]}) do
+        with {:ok, %Interest{} = interest } <- Projectmode.find_or_create_interest_by(%{name: name}) do
           with {:ok, %Userinterest{} = userinterest } <- Projectmode.create_userinterest(%{user_id: current_user.id, interest_id: interest.id}) do
             userinterest = userinterest |> PmApi.Repo.preload([:interest])
             conn
             |> put_status(:created)
-            |> render("show.json", userinterest: userinterest)
+            |> render("show.json", userinterest: userinterest, user: current_user)
           end
         end
       _ ->
@@ -43,9 +43,18 @@ defmodule PmApiWeb.UserinterestController do
   # end
 
   def delete(conn, %{"id" => id}) do
-    userinterest = Projectmode.get_userinterest!(id)
-    with {:ok, %Userinterest{}} <- Projectmode.delete_userinterest(userinterest) do
-      send_resp(conn, :no_content, "")
+    case PmApiWeb.SessionController.get_logged_in_user(conn) do
+      {:ok, current_user} ->
+        userinterest = Projectmode.get_userinterest!(id)
+        if to_string(current_user.id) == to_string(userinterest.user_id) do
+          with {:ok, %Userinterest{}} <- Projectmode.delete_userinterest(userinterest) do
+            conn
+            |> render("deleted.json", old_id: id, user: current_user)
+          end
+        end
+      _ ->
+        conn
+        |> render("error.json")
     end
   end
 end

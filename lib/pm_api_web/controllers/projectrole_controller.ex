@@ -34,13 +34,6 @@ defmodule PmApiWeb.ProjectroleController do
         conn
         |> render("error.json")
     end
-
-    # with {:ok, %Projectrole{} = projectrole} <- Projectmode.create_projectrole(projectrole_params) do
-    #   conn
-    #   |> put_status(:created)
-    #   # |> put_resp_header("location", projectrole_path(conn, :show, projectrole))
-    #   |> render("show.json", projectrole: projectrole)
-    # end
   end
 
   def show(conn, %{"id" => id}) do

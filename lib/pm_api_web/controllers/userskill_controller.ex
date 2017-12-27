@@ -44,9 +44,18 @@ defmodule PmApiWeb.UserskillController do
   # end
 
   def delete(conn, %{"id" => id}) do
-    userskill = Projectmode.get_userskill!(id)
-    with {:ok, %Userskill{}} <- Projectmode.delete_userskill(userskill) do
-      send_resp(conn, :no_content, "")
+    case PmApiWeb.SessionController.get_logged_in_user(conn) do
+      {:ok, current_user} ->
+        userskill = Projectmode.get_userskill!(id)
+        if to_string(current_user.id) == to_string(userskill.user_id) do
+          with {:ok, %Userskill{}} <- Projectmode.delete_userskill(userskill) do
+            conn
+            |> render("deleted.json", old_id: id, user: current_user)
+          end
+        end
+      _ ->
+        conn
+        |> render("error.json")
     end
   end
 end

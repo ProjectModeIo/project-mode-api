@@ -3,6 +3,7 @@ defmodule PmApiWeb.ProjectstackController do
 
   alias PmApi.Projectmode
   alias PmApi.Projectmode.Projectstack
+  alias PmApi.Projectmode.Skill
 
   action_fallback PmApiWeb.FallbackController
 
@@ -11,12 +12,24 @@ defmodule PmApiWeb.ProjectstackController do
     render(conn, "index.json", projectstacks: projectstacks)
   end
 
-  def create(conn, %{"projectstack" => projectstack_params}) do
-    with {:ok, %Projectstack{} = projectstack} <- Projectmode.create_projectstack(projectstack_params) do
-      conn
-      |> put_status(:created)
-      # |> put_resp_header("location", projectstack_path(conn, :show, projectstack))
-      |> render("show.json", projectstack: projectstack)
+  def create(conn, %{"project_id" => project_id, "name" => name}) do
+    case PmApiWeb.SessionController.get_logged_in_user(conn) do
+      {:ok, current_user} ->
+        project = Projectmode.get_project!(project_id)
+        if project |> Projectmode.verify_project_owner(current_user) do
+          {:ok, %Skill{}=skill} = Projectmode.find_or_create_skill_by(%{name: name})
+          with {:ok, %Projectstack{} = projectstack } <- Projectmode.create_projectstack(%{project_id: project_id, skill_id: skill.id}) do
+            conn
+            |> put_status(:created)
+            |> render("show.json", projectstack: projectstack)
+          end
+        else
+          conn
+          |> render("error.json")
+        end
+      _ ->
+        conn
+        |> render("error.json")
     end
   end
 

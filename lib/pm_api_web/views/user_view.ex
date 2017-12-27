@@ -2,14 +2,18 @@ require IEx
 defmodule PmApiWeb.UserView do
   use PmApiWeb, :view
   alias PmApiWeb.UserView
+  alias PmApi.Projectmode
+  alias PmApi.Projectmode.Project
+  alias PmApi.Repo
+  import Ecto.Query
 
   # def render("index.json", %{users: users}) do
   #   %{data: render_many(users, UserView, "user.json")}
   # end
   #
-  # def render("show.json", %{user: user}) do
-  #   %{data: render_one(user, UserView, "user.json")}
-  # end
+  def render("show.json", %{user: user}) do
+    %{data: render_one(user, UserView, "user.json")}
+  end
 
   def render("user.json", %{user: user}) do
     # IEx.pry
@@ -23,9 +27,41 @@ defmodule PmApiWeb.UserView do
       created_projects: render_many(user.projects, PmApiWeb.ProjectView, "project.json"),
 
       roles: render_many(user.userroles, PmApiWeb.UserroleView, "userrole.json"),
-      # roles: render_many(user.roles, PmApiWeb.RoleView, "role.json"),
       skills: render_many(user.userskills, PmApiWeb.UserskillView, "userskill.json"),
       interests: render_many(user.userinterests, PmApiWeb.UserinterestView, "userinterest.json")
+    }
+  end
+
+  def render("feed.json", %{user: user}) do
+    projects_role_related = PmApi.Projectmode.Project
+    |> distinct(true)
+    |> Project.filter_by({:role_match, user})
+    |> Repo.all()
+
+    projects_interest_related = PmApi.Projectmode.Project
+    |> distinct(true)
+    |> Project.filter_by({:interest_match, user})
+    |> Repo.all()
+
+    projects_skill_related = PmApi.Projectmode.Project
+    |> distinct(true)
+    |> Project.filter_by({:skill_match, user})
+    |> Repo.all()
+
+    projects_recommended = PmApi.Projectmode.Project
+    |> distinct(true)
+    |> Project.filter_by({:skill_match, user})
+    |> Project.filter_by({:interest_match, user})
+    |> Repo.all()
+
+    projects_all = PmApi.Projectmode.Project |> Repo.all()
+
+    %{
+      projects_role_related: render_many(projects_role_related, PmApiWeb.ProjectView, "project.json"),
+      projects_interest_related: render_many(projects_interest_related, PmApiWeb.ProjectView, "project.json"),
+      projects_skill_related: render_many(projects_skill_related, PmApiWeb.ProjectView, "project.json"),
+      projects_recommended: render_many(projects_recommended, PmApiWeb.ProjectView, "project.json"),
+      projects_all: render_many(projects_all, PmApiWeb.ProjectView, "project.json"),
     }
   end
 end

@@ -1,6 +1,7 @@
 defmodule PmApi.Projectmode.Project do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias PmApi.Projectmode.Project
 
 
@@ -24,7 +25,7 @@ defmodule PmApi.Projectmode.Project do
     project
     |> cast(attrs, [:title, :description, :user_id])
     |> validate_required([:title, :description, :user_id])
-    |> validate_exclusion(:title, ~w(profile edit dashboard))
+    |> validate_exclusion(:title, ~w(profile edit new delete dashboard))
     |> create_slug_from_title()
     |> unique_constraint(:user_id_slug)
   end
@@ -33,12 +34,42 @@ defmodule PmApi.Projectmode.Project do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{title: title}} ->
         #clean non-alpha-numeric
-        slug = Regex.replace(~r/[^a-zA-Z0-9-_ ]/, title, "", global: true)
+        slug = Regex.replace(~r/[^A-z0-9-_ ]/, title, "", global: true)
         |> String.replace(" ","-")
         |> String.downcase()
         put_change(changeset, :slug, slug)
       _ ->
         changeset
     end
+  end
+
+  def filter_by(query, {:role_match, %PmApi.Projectmode.User{}=user}) do
+    # query = Project model
+    from p in query,
+      inner_join: pr in assoc(p, :projectroles),
+      inner_join: r in assoc(pr, :role),
+      inner_join: ur in assoc(r, :userroles),
+      inner_join: u in assoc(ur, :user),
+      where: u.id == ^user.id
+  end
+
+  def filter_by(query, {:skill_match, %PmApi.Projectmode.User{}=user}) do
+    # query = Project model
+    from p in query,
+      inner_join: pr in assoc(p, :projectstacks),
+      inner_join: r in assoc(pr, :skill),
+      inner_join: ur in assoc(r, :userskills),
+      inner_join: u in assoc(ur, :user),
+      where: u.id == ^user.id
+  end
+
+  def filter_by(query, {:interest_match, %PmApi.Projectmode.User{}=user}) do
+    # query = Project model
+    from p in query,
+      inner_join: pr in assoc(p, :projectcategories),
+      inner_join: r in assoc(pr, :interest),
+      inner_join: ur in assoc(r, :userinterests),
+      inner_join: u in assoc(ur, :user),
+      where: u.id == ^user.id
   end
 end

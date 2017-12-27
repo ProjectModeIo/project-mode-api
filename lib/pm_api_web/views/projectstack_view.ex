@@ -11,6 +11,10 @@ defmodule PmApiWeb.ProjectstackView do
   end
 
   def render("projectstack.json", %{projectstack: projectstack}) do
-    %{id: projectstack.id}
+    projectstack = projectstack |> PmApi.Repo.preload([:skill])
+    %{
+      id: projectstack.id,
+      name: projectstack.skill.name
+    }
   end
 end

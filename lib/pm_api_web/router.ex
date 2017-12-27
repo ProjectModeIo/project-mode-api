@@ -34,6 +34,7 @@ defmodule PmApiWeb.Router do
     resources "/roles", RoleController, only: [:index, :show]
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
+    get "/projectslug/:slug", ProjectController, :showslug
   end
 
   scope "/api/v1", PmApiWeb do
@@ -46,15 +47,18 @@ defmodule PmApiWeb.Router do
 
     #user
     resources "/users", UserController, only: [:show, :delete]
+    patch "/edituser", UserController, :update
     resources "/userroles", UserroleController, only: [:create, :delete]
     resources "/userskills", UserskillController, only: [:create, :delete]
     resources "/userinterests", UserinterestController, only: [:create, :delete]
 
     #project
-    get "/projectslug/:slug", ProjectController, :showslug
     resources "/projects", ProjectController, only: [:create, :delete, :update]
     resources "/projectroles", ProjectroleController, only: [:create, :delete]
     resources "/projectstacks", ProjectstackController, only: [:create, :delete]
     resources "/projectcategories", ProjectcategoryController, only: [:create, :delete]
+
+    #comments
+    resources "/comments", CommentController, only: [:create]
   end
 end

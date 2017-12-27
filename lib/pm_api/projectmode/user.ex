@@ -30,7 +30,7 @@ defmodule PmApi.Projectmode.User do
     |> cast(attrs, [:email, :firstname, :lastname, :tagline, :username])
     |> validate_required([:email, :firstname, :lastname, :username])
     |> validate_format(:username, ~r/^[a-zA-Z0-9-_]+$/)
-    |> validate_exclusion(:username, ~w(admin superadmin project projects))
+    |> validate_exclusion(:username, ~w(admin superadmin project projects edit new delete))
     |> unique_constraint(:email)
     |> unique_constraint(:username)
   end

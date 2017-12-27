@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.CommentController do
   use PmApiWeb, :controller
 
@@ -12,12 +13,26 @@ defmodule PmApiWeb.CommentController do
   end
 
   def create(conn, %{"comment" => comment_params}) do
-    with {:ok, %Comment{} = comment} <- Projectmode.create_comment(comment_params) do
+    case PmApiWeb.SessionController.get_logged_in_user(conn) do
+      {:ok, current_user} ->
+        comment_params = Map.put(comment_params, "commenter_id", current_user.id)
+        with {:ok, %Comment{} = comment} <- Projectmode.create_comment(comment_params) do
+          conn
+          |> put_status(:created)
+          |> render("show.json", comment: comment)
+        end
+      _ ->
       conn
-      |> put_status(:created)
-      # |> put_resp_header("location", comment_path(conn, :show, comment))
-      |> render("show.json", comment: comment)
+      |> render("error.json")
     end
+
+
+    # with {:ok, %Comment{} = comment} <- Projectmode.create_comment(comment_params) do
+    #   conn
+    #   |> put_status(:created)
+    #   # |> put_resp_header("location", comment_path(conn, :show, comment))
+    #   |> render("show.json", comment: comment)
+    # end
   end
 
   def show(conn, %{"id" => id}) do

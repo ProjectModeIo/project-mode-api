@@ -18,4 +18,11 @@ defmodule PmApiWeb.UserskillView do
       # skills: render_one(userskill.skill, PmApiWeb.SkillView, "skill.json")
   }
   end
+
+  def render("deleted.json", %{old_id: old_id, user: user}) do
+    %{
+      id: old_id,
+      feed: render_one(user, PmApiWeb.UserView, "feed.json")
+    }
+  end
 end

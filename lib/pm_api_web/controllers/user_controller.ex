@@ -37,13 +37,12 @@ defmodule PmApiWeb.UserController do
     render(conn, "show.json", user: user)
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def update(conn, %{"user" => user_params}) do
     # user = Projectmode.get_user!(id)
     #
     # with {:ok, %User{} = user} <- Projectmode.update_user(user, user_params) do
     #   render(conn, "show.json", user: user)
     # end
-    IEx.pry
     case PmApiWeb.SessionController.get_logged_in_user(conn) do
       {:ok, user} ->
         with {:ok, %User{} = user } <- Projectmode.update_user(user, user_params) do

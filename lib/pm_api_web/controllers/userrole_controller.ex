@@ -65,9 +65,18 @@ defmodule PmApiWeb.UserroleController do
   # end
 
   def delete(conn, %{"id" => id}) do
-    userrole = Projectmode.get_userrole!(id)
-    with {:ok, %Userrole{}} <- Projectmode.delete_userrole(userrole) do
-      send_resp(conn, :no_content, "")
+    case PmApiWeb.SessionController.get_logged_in_user(conn) do
+      {:ok, current_user} ->
+        userrole = Projectmode.get_userrole!(id)
+        if to_string(current_user.id) == to_string(userrole.user_id) do
+          with {:ok, %Userrole{}} <- Projectmode.delete_userrole(userrole) do
+            conn
+            |> render("deleted.json", old_id: id, user: current_user)
+          end
+        end
+      _ ->
+        conn
+        |> render("error.json")
     end
   end
 end

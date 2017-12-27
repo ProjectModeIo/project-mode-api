@@ -17,4 +17,11 @@ defmodule PmApiWeb.UserroleView do
       type: userrole.role.type
     }
   end
+
+  def render("deleted.json", %{old_id: old_id, user: user}) do
+    %{
+      id: old_id,
+      feed: render_one(user, PmApiWeb.UserView, "feed.json")
+    }
+  end
 end

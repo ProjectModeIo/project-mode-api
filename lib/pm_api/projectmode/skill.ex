@@ -6,7 +6,8 @@ defmodule PmApi.Projectmode.Skill do
 
   schema "skills" do
     field :name, :string
-    # many_to_many :users, PmApi.Projectmode.User, join_through: "userskills"
+    has_many :userskills, PmApi.Projectmode.Userskill
+    has_many :projectstacks, PmApi.Projectmode.Projectstack
 
     timestamps()
   end
