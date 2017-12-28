@@ -64,6 +64,12 @@ defmodule PmApiWeb.SessionController do
     end
   end
 
+  def load(conn, _params) do
+    conn
+    |> put_status(:ok)
+    |> render("load.json")
+  end
+
   def unauthenticated(conn, _params) do
     conn
     |> put_status(:forbidden)

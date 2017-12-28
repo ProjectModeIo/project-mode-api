@@ -54,14 +54,14 @@ defmodule PmApiWeb.UserView do
     |> Project.filter_by({:interest_match, user})
     |> Repo.all()
 
-    projects_all = PmApi.Projectmode.Project |> Repo.all()
-
     %{
       projects_role_related: render_many(projects_role_related, PmApiWeb.ProjectView, "project.json"),
       projects_interest_related: render_many(projects_interest_related, PmApiWeb.ProjectView, "project.json"),
       projects_skill_related: render_many(projects_skill_related, PmApiWeb.ProjectView, "project.json"),
-      projects_recommended: render_many(projects_recommended, PmApiWeb.ProjectView, "project.json"),
-      projects_all: render_many(projects_all, PmApiWeb.ProjectView, "project.json"),
+      projects_recommended: render_many(projects_recommended, PmApiWeb.ProjectView, "project.json")
     }
+  end
+
+  def render("channels.json", %{user: user}) do
   end
 end

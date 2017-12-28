@@ -5,10 +5,29 @@ defmodule PmApiWeb.SessionView do
   alias PmApi.Repo
 
   def render("show.json", %{user: user, jwt: jwt}) do
+    #corresponds to setUser in react app
     %{
       data: render_one(user, PmApiWeb.UserView, "user.json"),
       feed: render_one(user, PmApiWeb.UserView, "feed.json"),
+      channels: %{
+        subscribedChannels: []
+      },
       meta: %{token: jwt}
+    }
+  end
+
+  def render("load.json", _) do
+    #corresponds to loadAllThings in react app
+    projects_all = PmApi.Projectmode.Project |> Repo.all()
+    channels_all = PmApi.Projectmode.Channel |> Repo.all()
+
+    %{
+      feed: %{
+        projects_all: render_many(projects_all, PmApiWeb.ProjectView, "project.json")
+      },
+      channels: %{
+        allChannels: render_many(channels_all, PmApiWeb.ChannelView, "channel.json")
+      }
     }
   end
 

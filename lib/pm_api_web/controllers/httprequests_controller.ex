@@ -1,7 +1,7 @@
 require IEx
 defmodule PmApiWeb.HttprequestsController do
   use PmApiWeb, :controller
-  alias PmApiWeb.Httprequests
+  alias PmApiWeb.Github
   action_fallback PmApiWeb.FallbackController
 
   def github(conn, params) do

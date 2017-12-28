@@ -28,7 +28,8 @@ defmodule PmApiWeb.Router do
     pipe_through [:api]
 
     post "/sessions", SessionController, :create #login
-    # get "/sessions/current", SessionController, :current #get current user
+    get "/load", SessionController, :load #loadAllThings in react app
+    resources "/channels", ChannelController, only: [:index, :show]
     resources "/users", UserController, only: [:create]
     resources "/projects", ProjectController, only: [:index, :show]
     resources "/roles", RoleController, only: [:index, :show]
@@ -43,7 +44,7 @@ defmodule PmApiWeb.Router do
 
     #session
     delete "/sessions", SessionController, :delete
-    post "/sessions/refresh", SessionController, :refresh
+    post "/sessions/refresh", SessionController, :refresh #setUser in react app
     patch "/users/update", UserController, :update
 
     #user

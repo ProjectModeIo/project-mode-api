@@ -1,4 +1,4 @@
-defmodule Github do
+defmodule PmApiWeb.Github do
   use HTTPotion.Base
 
   def process_request_headers(headers) do
