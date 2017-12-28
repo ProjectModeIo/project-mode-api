@@ -5,7 +5,7 @@ defmodule PmApi.Projectmode.Role do
 
 
   schema "roles" do
-    field :type, :string
+    field :name, :string
     has_many :userroles, PmApi.Projectmode.Userrole
     has_many :projectroles, PmApi.Projectmode.Projectrole
     # many_to_many :users, PmApi.Projectmode.User, join_through: "userroles"
@@ -16,8 +16,8 @@ defmodule PmApi.Projectmode.Role do
   @doc false
   def changeset(%Role{} = role, attrs) do
     role
-    |> cast(attrs, [:type])
-    |> validate_required([:type])
-    |> unique_constraint(:type)
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end

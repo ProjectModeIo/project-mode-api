@@ -7,6 +7,6 @@ defmodule PmApi.Repo.Migrations.CreateInterests do
 
       timestamps()
     end
-
+    create index(:interests, [:name], unique: true)
   end
 end

@@ -7,6 +7,6 @@ defmodule PmApi.Repo.Migrations.CreateSkills do
 
       timestamps()
     end
-
+    create index(:skills, [:name], unique: true)
   end
 end

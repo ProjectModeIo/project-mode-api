@@ -12,6 +12,6 @@ defmodule PmApiWeb.RoleView do
 
   def render("role.json", %{role: role}) do
     %{id: role.id,
-      type: role.type}
+      name: role.name}
   end
 end

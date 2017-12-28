@@ -55,8 +55,8 @@ defmodule PmApiWeb.Router do
     #project
     resources "/projects", ProjectController, only: [:create, :delete, :update]
     resources "/projectroles", ProjectroleController, only: [:create, :delete]
-    resources "/projectstacks", ProjectstackController, only: [:create, :delete]
-    resources "/projectcategories", ProjectcategoryController, only: [:create, :delete]
+    resources "/projectskills", ProjectskillController, only: [:create, :delete]
+    resources "/projectinterests", ProjectinterestController, only: [:create, :delete]
 
     #comments
     resources "/comments", CommentController, only: [:create]

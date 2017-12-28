@@ -88,7 +88,7 @@ defmodule PmApi.Projectmode do
   end
 
   def create_project(attrs \\ %{}) do
-    %Project{}
+    project = %Project{}
     |> Project.changeset(attrs)
     |> Repo.insert()
   end
@@ -366,60 +366,60 @@ defmodule PmApi.Projectmode do
     Repo.delete(userinterest)
   end
 
-  alias PmApi.Projectmode.Projectstack
+  alias PmApi.Projectmode.Projectskill
 
-  def list_projectstacks do
-    Repo.all(Projectstack)
+  def list_projectskills do
+    Repo.all(Projectskill)
   end
 
-  def get_projectstack!(id), do: Repo.get!(Projectstack, id)
+  def get_projectskill!(id), do: Repo.get!(Projectskill, id)
 
-  def create_projectstack(attrs \\ %{}) do
-    %Projectstack{}
-    |> Projectstack.changeset(attrs)
+  def create_projectskill(attrs \\ %{}) do
+    %Projectskill{}
+    |> Projectskill.changeset(attrs)
     |> Repo.insert()
   end
 
-  def update_projectstack(%Projectstack{} = projectstack, attrs) do
-    projectstack
-    |> Projectstack.changeset(attrs)
+  def update_projectskill(%Projectskill{} = projectskill, attrs) do
+    projectskill
+    |> Projectskill.changeset(attrs)
     |> Repo.update()
   end
 
-  def delete_projectstack(%Projectstack{} = projectstack) do
-    Repo.delete(projectstack)
+  def delete_projectskill(%Projectskill{} = projectskill) do
+    Repo.delete(projectskill)
   end
 
-  def change_projectstack(%Projectstack{} = projectstack) do
-    Projectstack.changeset(projectstack, %{})
+  def change_projectskill(%Projectskill{} = projectskill) do
+    Projectskill.changeset(projectskill, %{})
   end
 
-  alias PmApi.Projectmode.Projectcategory
+  alias PmApi.Projectmode.Projectinterest
 
-  def list_projectcategories do
-    Repo.all(Projectcategory)
+  def list_projectinterests do
+    Repo.all(Projectinterest)
   end
 
-  def get_projectcategory!(id), do: Repo.get!(Projectcategory, id)
+  def get_projectinterest!(id), do: Repo.get!(Projectinterest, id)
 
-  def create_projectcategory(attrs \\ %{}) do
-    %Projectcategory{}
-    |> Projectcategory.changeset(attrs)
+  def create_projectinterest(attrs \\ %{}) do
+    %Projectinterest{}
+    |> Projectinterest.changeset(attrs)
     |> Repo.insert()
   end
 
-  def update_projectcategory(%Projectcategory{} = projectcategory, attrs) do
-    projectcategory
-    |> Projectcategory.changeset(attrs)
+  def update_projectinterest(%Projectinterest{} = projectinterest, attrs) do
+    projectinterest
+    |> Projectinterest.changeset(attrs)
     |> Repo.update()
   end
 
-  def delete_projectcategory(%Projectcategory{} = projectcategory) do
-    Repo.delete(projectcategory)
+  def delete_projectinterest(%Projectinterest{} = projectinterest) do
+    Repo.delete(projectinterest)
   end
 
-  def change_projectcategory(%Projectcategory{} = projectcategory) do
-    Projectcategory.changeset(projectcategory, %{})
+  def change_projectinterest(%Projectinterest{} = projectinterest) do
+    Projectinterest.changeset(projectinterest, %{})
   end
 
   alias PmApi.Projectmode.Watchedproject

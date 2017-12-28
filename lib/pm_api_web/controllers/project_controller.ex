@@ -18,8 +18,8 @@ defmodule PmApiWeb.ProjectController do
     case PmApiWeb.SessionController.get_logged_in_user(conn) do
       {:ok, current_user} ->
         project_params = Map.put(project_params, "user_id", current_user.id)
-        # IEx.pry
         with {:ok, %Project{} = project} <- Projectmode.create_project(project_params) do
+          IEx.pry
           conn
           |> put_status(:created)
           |> render("show.json", project: project)

@@ -7,7 +7,7 @@ defmodule PmApi.Projectmode.Skill do
   schema "skills" do
     field :name, :string
     has_many :userskills, PmApi.Projectmode.Userskill
-    has_many :projectstacks, PmApi.Projectmode.Projectstack
+    has_many :projectskills, PmApi.Projectmode.Projectskill
 
     timestamps()
   end

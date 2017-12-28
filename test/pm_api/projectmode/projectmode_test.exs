@@ -312,9 +312,9 @@ defmodule PmApi.ProjectmodeTest do
   describe "roles" do
     alias PmApi.Projectmode.Role
 
-    @valid_attrs %{type: "some type"}
-    @update_attrs %{type: "some updated type"}
-    @invalid_attrs %{type: nil}
+    @valid_attrs %{name: "some name"}
+    @update_attrs %{name: "some updated name"}
+    @invalid_attrs %{name: nil}
 
     def role_fixture(attrs \\ %{}) do
       {:ok, role} =
@@ -337,7 +337,7 @@ defmodule PmApi.ProjectmodeTest do
 
     test "create_role/1 with valid data creates a role" do
       assert {:ok, %Role{} = role} = Projectmode.create_role(@valid_attrs)
-      assert role.type == "some type"
+      assert role.name == "some name"
     end
 
     test "create_role/1 with invalid data returns error changeset" do
@@ -348,7 +348,7 @@ defmodule PmApi.ProjectmodeTest do
       role = role_fixture()
       assert {:ok, role} = Projectmode.update_role(role, @update_attrs)
       assert %Role{} = role
-      assert role.type == "some updated type"
+      assert role.name == "some updated name"
     end
 
     test "update_role/2 with invalid data returns error changeset" do
@@ -779,61 +779,61 @@ defmodule PmApi.ProjectmodeTest do
     end
   end
 
-  describe "projectcategories" do
-    alias PmApi.Projectmode.Projectcategory
+  describe "projectinterests" do
+    alias PmApi.Projectmode.Projectinterest
 
     @valid_attrs %{}
     @update_attrs %{}
     @invalid_attrs %{}
 
-    def projectcategory_fixture(attrs \\ %{}) do
-      {:ok, projectcategory} =
+    def projectinterest_fixture(attrs \\ %{}) do
+      {:ok, projectinterest} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Projectmode.create_projectcategory()
+        |> Projectmode.create_projectinterest()
 
-      projectcategory
+      projectinterest
     end
 
-    test "list_projectcategories/0 returns all projectcategories" do
-      projectcategory = projectcategory_fixture()
-      assert Projectmode.list_projectcategories() == [projectcategory]
+    test "list_projectinterests/0 returns all projectinterests" do
+      projectinterest = projectinterest_fixture()
+      assert Projectmode.list_projectinterests() == [projectinterest]
     end
 
-    test "get_projectcategory!/1 returns the projectcategory with given id" do
-      projectcategory = projectcategory_fixture()
-      assert Projectmode.get_projectcategory!(projectcategory.id) == projectcategory
+    test "get_projectinterest!/1 returns the projectinterest with given id" do
+      projectinterest = projectinterest_fixture()
+      assert Projectmode.get_projectinterest!(projectinterest.id) == projectinterest
     end
 
-    test "create_projectcategory/1 with valid data creates a projectcategory" do
-      assert {:ok, %Projectcategory{} = projectcategory} = Projectmode.create_projectcategory(@valid_attrs)
+    test "create_projectinterest/1 with valid data creates a projectinterest" do
+      assert {:ok, %Projectinterest{} = projectinterest} = Projectmode.create_projectinterest(@valid_attrs)
     end
 
-    test "create_projectcategory/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Projectmode.create_projectcategory(@invalid_attrs)
+    test "create_projectinterest/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Projectmode.create_projectinterest(@invalid_attrs)
     end
 
-    test "update_projectcategory/2 with valid data updates the projectcategory" do
-      projectcategory = projectcategory_fixture()
-      assert {:ok, projectcategory} = Projectmode.update_projectcategory(projectcategory, @update_attrs)
-      assert %Projectcategory{} = projectcategory
+    test "update_projectinterest/2 with valid data updates the projectinterest" do
+      projectinterest = projectinterest_fixture()
+      assert {:ok, projectinterest} = Projectmode.update_projectinterest(projectinterest, @update_attrs)
+      assert %Projectinterest{} = projectinterest
     end
 
-    test "update_projectcategory/2 with invalid data returns error changeset" do
-      projectcategory = projectcategory_fixture()
-      assert {:error, %Ecto.Changeset{}} = Projectmode.update_projectcategory(projectcategory, @invalid_attrs)
-      assert projectcategory == Projectmode.get_projectcategory!(projectcategory.id)
+    test "update_projectinterest/2 with invalid data returns error changeset" do
+      projectinterest = projectinterest_fixture()
+      assert {:error, %Ecto.Changeset{}} = Projectmode.update_projectinterest(projectinterest, @invalid_attrs)
+      assert projectinterest == Projectmode.get_projectinterest!(projectinterest.id)
     end
 
-    test "delete_projectcategory/1 deletes the projectcategory" do
-      projectcategory = projectcategory_fixture()
-      assert {:ok, %Projectcategory{}} = Projectmode.delete_projectcategory(projectcategory)
-      assert_raise Ecto.NoResultsError, fn -> Projectmode.get_projectcategory!(projectcategory.id) end
+    test "delete_projectinterest/1 deletes the projectinterest" do
+      projectinterest = projectinterest_fixture()
+      assert {:ok, %Projectinterest{}} = Projectmode.delete_projectinterest(projectinterest)
+      assert_raise Ecto.NoResultsError, fn -> Projectmode.get_projectinterest!(projectinterest.id) end
     end
 
-    test "change_projectcategory/1 returns a projectcategory changeset" do
-      projectcategory = projectcategory_fixture()
-      assert %Ecto.Changeset{} = Projectmode.change_projectcategory(projectcategory)
+    test "change_projectinterest/1 returns a projectinterest changeset" do
+      projectinterest = projectinterest_fixture()
+      assert %Ecto.Changeset{} = Projectmode.change_projectinterest(projectinterest)
     end
   end
 

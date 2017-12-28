@@ -1,10 +1,10 @@
-defmodule PmApi.Projectmode.Projectstack do
+defmodule PmApi.Projectmode.Projectskill do
   use Ecto.Schema
   import Ecto.Changeset
-  alias PmApi.Projectmode.Projectstack
+  alias PmApi.Projectmode.Projectskill
 
 
-  schema "projectstacks" do
+  schema "projectskills" do
     # field :project_id, :id
     # field :skill_id, :id
     belongs_to :project, PmApi.Projectmode.Project
@@ -13,8 +13,8 @@ defmodule PmApi.Projectmode.Projectstack do
   end
 
   @doc false
-  def changeset(%Projectstack{} = projectstack, attrs) do
-    projectstack
+  def changeset(%Projectskill{} = projectskill, attrs) do
+    projectskill
     |> cast(attrs, [:project_id, :skill_id])
     |> validate_required([:project_id, :skill_id])
     |> unique_constraint(:project_id_skill_id)

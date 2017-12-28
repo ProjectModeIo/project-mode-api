@@ -1,10 +1,10 @@
-defmodule PmApi.Projectmode.Projectcategory do
+defmodule PmApi.Projectmode.Projectinterest do
   use Ecto.Schema
   import Ecto.Changeset
-  alias PmApi.Projectmode.Projectcategory
+  alias PmApi.Projectmode.Projectinterest
 
 
-  schema "projectcategories" do
+  schema "projectinterests" do
     # field :project_id, :id
     # field :interest_id, :id
     belongs_to :project, PmApi.Projectmode.Project
@@ -13,8 +13,8 @@ defmodule PmApi.Projectmode.Projectcategory do
   end
 
   @doc false
-  def changeset(%Projectcategory{} = projectcategory, attrs) do
-    projectcategory
+  def changeset(%Projectinterest{} = projectinterest, attrs) do
+    projectinterest
     |> cast(attrs, [:project_id, :interest_id])
     |> validate_required([:project_id, :interest_id])
     |> unique_constraint(:project_id_interest_id)

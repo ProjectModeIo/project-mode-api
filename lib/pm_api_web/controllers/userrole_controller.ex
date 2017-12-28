@@ -18,7 +18,7 @@ defmodule PmApiWeb.UserroleController do
   # def create(conn, params) do
   #   case PmApiWeb.SessionController.get_logged_in_user(conn) do
   #     {:ok, current_user} ->
-  #       with {:ok, %Role{} = role } <- Projectmode.find_or_create_role_by(%{type: params["type"]}) do
+  #       with {:ok, %Role{} = role } <- Projectmode.find_or_create_role_by(%{name: params["name"]}) do
   #         with {:ok, %Userrole{} = userrole } <- Projectmode.create_userrole(%{user_id: current_user.id, role_id: role.id}) do
   #           conn
   #           |> put_status(:created)
@@ -35,7 +35,7 @@ defmodule PmApiWeb.UserroleController do
     # IEx.pry
     case PmApiWeb.SessionController.get_logged_in_user(conn) do
       {:ok, current_user} ->
-        with {:ok, %Role{} = role } <- Projectmode.find_or_create_role_by(%{type: params["type"]}) do
+        with {:ok, %Role{} = role } <- Projectmode.find_or_create_role_by(%{name: params["name"]}) do
           # IEx.pry
           with {:ok, %Userrole{} = userrole } <- Projectmode.create_userrole(%{user_id: current_user.id, role_id: role.id}) do
             userrole = userrole |> PmApi.Repo.preload([:role])

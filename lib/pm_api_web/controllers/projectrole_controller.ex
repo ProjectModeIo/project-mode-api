@@ -4,7 +4,6 @@ defmodule PmApiWeb.ProjectroleController do
 
   alias PmApi.Projectmode
   alias PmApi.Projectmode.Projectrole
-  # alias PmApi.Projectmode.Project
   alias PmApi.Projectmode.Role
 
   action_fallback PmApiWeb.FallbackController
@@ -20,7 +19,7 @@ defmodule PmApiWeb.ProjectroleController do
       {:ok, current_user} ->
         project = Projectmode.get_project!(params["project_id"])
         if project |> Projectmode.verify_project_owner(current_user) do
-          {:ok, %Role{}=role} = Projectmode.find_or_create_role_by(%{type: params["type"]})
+          {:ok, %Role{}=role} = Projectmode.find_or_create_role_by(%{name: params["name"]})
           with {:ok, %Projectrole{} = projectrole } <- Projectmode.create_projectrole(%{project_id: project.id, role_id: role.id}) do
             conn
             |> put_status(:created)

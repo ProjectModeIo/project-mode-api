@@ -4,9 +4,9 @@ defmodule PmApiWeb.RoleControllerTest do
   alias PmApi.Projectmode
   alias PmApi.Projectmode.Role
 
-  @create_attrs %{type: "some type"}
-  @update_attrs %{type: "some updated type"}
-  @invalid_attrs %{type: nil}
+  @create_attrs %{name: "some name"}
+  @update_attrs %{name: "some updated name"}
+  @invalid_attrs %{name: nil}
 
   def fixture(:role) do
     {:ok, role} = Projectmode.create_role(@create_attrs)
@@ -32,7 +32,7 @@ defmodule PmApiWeb.RoleControllerTest do
       conn = get conn, role_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "type" => "some type"}
+        "name" => "some name"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -51,7 +51,7 @@ defmodule PmApiWeb.RoleControllerTest do
       conn = get conn, role_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "type" => "some updated type"}
+        "name" => "some updated name"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, role: role} do

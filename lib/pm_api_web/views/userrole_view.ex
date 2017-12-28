@@ -14,7 +14,7 @@ defmodule PmApiWeb.UserroleView do
     userrole = userrole |> PmApi.Repo.preload([:role])
     %{
       id: userrole.id,
-      type: userrole.role.type
+      name: userrole.role.name
     }
   end
 
