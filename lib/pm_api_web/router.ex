@@ -35,6 +35,7 @@ defmodule PmApiWeb.Router do
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
     get "/projectslug/:slug", ProjectController, :showslug
+    get "/github", HttprequestsController, :github
   end
 
   scope "/api/v1", PmApiWeb do
