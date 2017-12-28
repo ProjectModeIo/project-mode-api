@@ -83,10 +83,6 @@ defmodule PmApi.Projectmode do
     |> Repo.preload([:user])
   end
 
-  def verify_project_owner(%Project{} = project, %User{} = user) do
-    to_string(project.user.id) == to_string(user.id)
-  end
-
   def create_project(attrs \\ %{}) do
     project = %Project{}
     |> Project.changeset(attrs)
@@ -480,7 +476,7 @@ defmodule PmApi.Projectmode do
 
   # channels ?
   def list_channels do
-    
+
   end
 
   alias PmApi.Projectmode.Channel

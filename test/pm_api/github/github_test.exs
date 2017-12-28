@@ -72,4 +72,66 @@ defmodule PmApi.GithubTest do
       assert %Ecto.Changeset{} = Github.change_account(account)
     end
   end
+
+  describe "repos" do
+    alias PmApi.Github.Repo
+
+    @valid_attrs %{commits_json: "some commits_json", totalcommits: 42}
+    @update_attrs %{commits_json: "some updated commits_json", totalcommits: 43}
+    @invalid_attrs %{commits_json: nil, totalcommits: nil}
+
+    def repo_fixture(attrs \\ %{}) do
+      {:ok, repo} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Github.create_repo()
+
+      repo
+    end
+
+    test "list_repos/0 returns all repos" do
+      repo = repo_fixture()
+      assert Github.list_repos() == [repo]
+    end
+
+    test "get_repo!/1 returns the repo with given id" do
+      repo = repo_fixture()
+      assert Github.get_repo!(repo.id) == repo
+    end
+
+    test "create_repo/1 with valid data creates a repo" do
+      assert {:ok, %Repo{} = repo} = Github.create_repo(@valid_attrs)
+      assert repo.commits_json == "some commits_json"
+      assert repo.totalcommits == 42
+    end
+
+    test "create_repo/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Github.create_repo(@invalid_attrs)
+    end
+
+    test "update_repo/2 with valid data updates the repo" do
+      repo = repo_fixture()
+      assert {:ok, repo} = Github.update_repo(repo, @update_attrs)
+      assert %Repo{} = repo
+      assert repo.commits_json == "some updated commits_json"
+      assert repo.totalcommits == 43
+    end
+
+    test "update_repo/2 with invalid data returns error changeset" do
+      repo = repo_fixture()
+      assert {:error, %Ecto.Changeset{}} = Github.update_repo(repo, @invalid_attrs)
+      assert repo == Github.get_repo!(repo.id)
+    end
+
+    test "delete_repo/1 deletes the repo" do
+      repo = repo_fixture()
+      assert {:ok, %Repo{}} = Github.delete_repo(repo)
+      assert_raise Ecto.NoResultsError, fn -> Github.get_repo!(repo.id) end
+    end
+
+    test "change_repo/1 returns a repo changeset" do
+      repo = repo_fixture()
+      assert %Ecto.Changeset{} = Github.change_repo(repo)
+    end
+  end
 end

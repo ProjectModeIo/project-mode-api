@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.ProjectinterestController do
   use PmApiWeb, :controller
 
@@ -13,19 +14,13 @@ defmodule PmApiWeb.ProjectinterestController do
   end
 
   def create(conn, %{"project_id" => project_id, "name" => name}) do
-    case PmApiWeb.SessionController.get_logged_in_user(conn) do
-      {:ok, current_user} ->
-        project = Projectmode.get_project!(project_id)
-        if project |> Projectmode.verify_project_owner(current_user) do
-          {:ok, %Interest{}=interest} = Projectmode.find_or_create_interest_by(%{name: name})
-          with {:ok, %Projectinterest{} = projectinterest } <- Projectmode.create_projectinterest(%{project_id: project_id, interest_id: interest.id}) do
-            conn
-            |> put_status(:created)
-            |> render("show.json", projectinterest: projectinterest)
-          end
-        else
+    case PmApi.AccessHandler.verify_resource_owner(conn, %{ project_id: project_id }) do
+      {:ok, project} ->
+        {:ok, %Interest{}=interest} = Projectmode.find_or_create_interest_by(%{name: name})
+        with {:ok, %Projectinterest{} = projectinterest } <- Projectmode.create_projectinterest(%{project_id: project_id, interest_id: interest.id}) do
           conn
-          |> render("error.json")
+          |> put_status(:created)
+          |> render("show.json", projectinterest: projectinterest)
         end
       _ ->
         conn

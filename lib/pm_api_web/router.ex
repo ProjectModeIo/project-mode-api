@@ -62,5 +62,9 @@ defmodule PmApiWeb.Router do
 
     #comments
     resources "/comments", CommentController, only: [:create]
+
+    #link stuff like github
+    resources "/github", AccountController, only: [:create, :delete, :show, :update]
+
   end
 end

@@ -13,21 +13,15 @@ defmodule PmApiWeb.ProjectroleController do
     render(conn, "index.json", projectroles: projectroles)
   end
 
-  def create(conn, params) do
+  def create(conn, %{"project_id" => project_id, "name" => name}) do
     # project can only update project if they are project creator
-    case PmApiWeb.SessionController.get_logged_in_user(conn) do
-      {:ok, current_user} ->
-        project = Projectmode.get_project!(params["project_id"])
-        if project |> Projectmode.verify_project_owner(current_user) do
-          {:ok, %Role{}=role} = Projectmode.find_or_create_role_by(%{name: params["name"]})
-          with {:ok, %Projectrole{} = projectrole } <- Projectmode.create_projectrole(%{project_id: project.id, role_id: role.id}) do
-            conn
-            |> put_status(:created)
-            |> render("show.json", projectrole: projectrole)
-          end
-        else
+    case PmApi.AccessHandler.verify_resource_owner(conn, %{ project_id: project_id }) do
+      {:ok, project} ->
+        {:ok, %Role{}=role} = Projectmode.find_or_create_role_by(%{name: name})
+        with {:ok, %Projectrole{} = projectrole } <- Projectmode.create_projectrole(%{project_id: project_id, role_id: role.id}) do
           conn
-          |> render("error.json")
+          |> put_status(:created)
+          |> render("show.json", projectrole: projectrole)
         end
       _ ->
         conn

@@ -13,19 +13,13 @@ defmodule PmApiWeb.ProjectskillController do
   end
 
   def create(conn, %{"project_id" => project_id, "name" => name}) do
-    case PmApiWeb.SessionController.get_logged_in_user(conn) do
-      {:ok, current_user} ->
-        project = Projectmode.get_project!(project_id)
-        if project |> Projectmode.verify_project_owner(current_user) do
-          {:ok, %Skill{}=skill} = Projectmode.find_or_create_skill_by(%{name: name})
-          with {:ok, %Projectskill{} = projectskill } <- Projectmode.create_projectskill(%{project_id: project_id, skill_id: skill.id}) do
-            conn
-            |> put_status(:created)
-            |> render("show.json", projectskill: projectskill)
-          end
-        else
+    case PmApi.AccessHandler.verify_resource_owner(conn, %{ project_id: project_id }) do
+      {:ok, project} ->
+        {:ok, %Skill{}=skill} = Projectmode.find_or_create_skill_by(%{name: name})
+        with {:ok, %Projectskill{} = projectskill } <- Projectmode.create_projectskill(%{project_id: project_id, skill_id: skill.id}) do
           conn
-          |> render("error.json")
+          |> put_status(:created)
+          |> render("show.json", projectskill: projectskill)
         end
       _ ->
         conn
