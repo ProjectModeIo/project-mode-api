@@ -19,7 +19,6 @@ defmodule PmApiWeb.ProjectController do
       {:ok, current_user} ->
         project_params = Map.put(project_params, "user_id", current_user.id)
         with {:ok, %Project{} = project} <- Projectmode.create_project(project_params) do
-          IEx.pry
           conn
           |> put_status(:created)
           |> render("show.json", project: project)

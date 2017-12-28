@@ -1,4 +1,3 @@
-require IEx
 defmodule PmApi.Projectmode.Project do
   use Ecto.Schema
   import Ecto.Changeset
@@ -29,12 +28,11 @@ defmodule PmApi.Projectmode.Project do
 
   @doc false
   def changeset(%Project{} = project, attrs) do
-    IEx.pry
     project
-    |> cast(attrs, [:title, :description, :user_id, :project_scope, :active])
+    |> cast(attrs, [:title, :description, :user_id, :project_scope, :repositories, :active])
     |> validate_required([:title, :description, :user_id])
-    |> validate_inclusion(:project_scope, ~w(passion_project experimental mini_side_project just_for_learning entrepreneurial))
-    |> validate_exclusion(:title, ~w(profile edit new delete dashboard))
+    |> validate_inclusion(:project_scope, ["passion project","experiment","business opportunity","just for fun","learning opportunity"])
+    |> validate_exclusion(:title, ["profile","edit","new","delete","dashboard"])
     |> create_slug_from_title()
     |> unique_constraint(:user_id_slug)
     |> unique_constraint(:user_id_title)
@@ -57,22 +55,6 @@ defmodule PmApi.Projectmode.Project do
     PmApi.Repo.insert_all(schema, objs, on_conflict: :nothing)
     PmApi.Repo.all(from r in schema, where: r.name in ^roles)
   end
-
-  # defp parse_roles(attrs) do
-  #   (attrs.roles || [])
-  #   |> Enum.map(&get_or_insert_roles/1)
-  # end
-  #
-  # defp get_or_insert_roles(obj) do
-  #   %PmApi.Projectmode.Role{}
-  #   |> PmApi.Projectmode.Role.changeset(obj)
-  #   |> PmApi.Repo.insert
-  #   |> case do
-  #     {:ok, role} -> role
-  #     {:error, _} -> PmApi.Repo.get_by!(PmApi.Projectmode.Role, obj)
-  #   end
-  # end
-
 
   def create_slug_from_title(changeset) do
     case changeset do
