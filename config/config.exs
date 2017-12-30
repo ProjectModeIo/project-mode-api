@@ -17,11 +17,6 @@ config :pm_api, PmApiWeb.Endpoint,
   pubsub: [name: PmApi.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
-# test entry
-config :pm_api, PmApiWeb.Httprequests,
-  github_client_id: System.get_env("GITHUB_CLIENT_ID"),
-  github_client_secret: System.get_env("GITHUB_CLIENT_SECRET")
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
