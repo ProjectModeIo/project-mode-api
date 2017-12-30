@@ -11,6 +11,7 @@ defmodule PmApi.Projectmode.Skill do
     has_many :projectskills, PmApi.Projectmode.Projectskill
     belongs_to :channel, PmApi.Projectmode.Channel
 
+    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectrole
     timestamps()
   end
 
@@ -19,6 +20,7 @@ defmodule PmApi.Projectmode.Skill do
     skills
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> validate_format(:name, ~r/^[a-zA-Z ]+$/)
     |> unique_constraint(:name)
     |> put_assoc(:channel, insert_channel(attrs[:name] || attrs["name"]))
   end

@@ -10,6 +10,8 @@ defmodule PmApi.Projectmode.Interest do
     has_many :userinterests, PmApi.Projectmode.Userinterest
     has_many :projectinterests, PmApi.Projectmode.Projectinterest
     belongs_to :channel, PmApi.Projectmode.Channel
+
+    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectrole
     timestamps()
   end
 
@@ -18,6 +20,7 @@ defmodule PmApi.Projectmode.Interest do
     interest
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> validate_format(:name, ~r/^[a-zA-Z ]+$/)
     |> put_assoc(:channel, insert_channel(attrs[:name] || attrs["name"]))
   end
 

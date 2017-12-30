@@ -11,6 +11,7 @@ defmodule PmApi.Projectmode.Role do
     has_many :projectroles, PmApi.Projectmode.Projectrole
     belongs_to :channel, PmApi.Projectmode.Channel
 
+    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectrole
     # many_to_many :users, PmApi.Projectmode.User, join_through: "userroles"
 
     timestamps()
@@ -21,6 +22,7 @@ defmodule PmApi.Projectmode.Role do
     role
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> validate_format(:name, ~r/^[a-zA-Z ]+$/)
     |> unique_constraint(:name)
     |> put_assoc(:channel, insert_channel(attrs[:name] || attrs["name"]))
   end

@@ -27,7 +27,8 @@ defmodule PmApi.Mixfile do
         :logger,
         :runtime_tools,
         :comeonin,
-        :httpotion]
+        :httpotion,
+        :scrivener_ecto]
     ]
   end
 
@@ -51,7 +52,8 @@ defmodule PmApi.Mixfile do
       {:comeonin, "~> 2.5"},
       {:guardian, "~> 1.0"},
       {:cors_plug, "~> 1.1"},
-      {:httpotion, "~> 3.0.2"}
+      {:httpotion, "~> 3.0.2"},
+      {:scrivener_ecto, "~> 1.0"}
     ]
   end
 

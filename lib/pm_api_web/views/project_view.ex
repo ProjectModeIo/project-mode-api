@@ -28,4 +28,18 @@ defmodule PmApiWeb.ProjectView do
     }
   end
 
+  def render("name_only.json", %{project: project}) do
+    # comment_query = from(c in Comments, where: is_nil(parent_id))
+    # project = project|> PmApi.Repo.preload([:user, :projectroles, :projectskills, :projectinterests, :comments])
+    %{
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      created_by: project.user.username,
+      inserted_at: project.inserted_at,
+      updated_at: project.updated_at,
+      slug: project.slug,
+    }
+  end
+
 end

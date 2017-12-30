@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.ChannelController do
   use PmApiWeb, :controller
 
@@ -8,7 +9,7 @@ defmodule PmApiWeb.ChannelController do
 
   def index(conn, _params) do
     channels = Projectmode.list_channels()
-    render(conn, "index.json", channels: channels)
+    render(conn, "index.json", channels: channels |> PmApi.Projectmode.channel_preloads())
   end
 
   def create(conn, %{"channel" => channel_params}) do
@@ -16,20 +17,26 @@ defmodule PmApiWeb.ChannelController do
       conn
       |> put_status(:created)
       # |> put_resp_header("location", channel_path(conn, :show, channel))
-      |> render("show.json", channel: channel)
+      |> render("show.json", channel: channel |> PmApi.Projectmode.channel_preloads())
     end
   end
 
   def show(conn, %{"id" => id}) do
     channel = Projectmode.get_channel!(id)
-    render(conn, "show.json", channel: channel)
+    render(conn, "show.json", channel: channel |> PmApi.Projectmode.channel_preloads())
+  end
+
+  def showslug(conn, %{"slug" => slug}) do
+    # IEx.pry
+    channel = Projectmode.get_channel_by_slug(slug)
+    render(conn, "show.json", channel: channel |> PmApi.Projectmode.channel_preloads())
   end
 
   def update(conn, %{"id" => id, "channel" => channel_params}) do
     channel = Projectmode.get_channel!(id)
 
     with {:ok, %Channel{} = channel} <- Projectmode.update_channel(channel, channel_params) do
-      render(conn, "show.json", channel: channel)
+      render(conn, "show.json", channel: channel |> PmApi.Projectmode.channel_preloads())
     end
   end
 

@@ -6,6 +6,10 @@ defmodule PmApi.Projectmode.Channel do
 
   schema "channels" do
     field :name, :string
+    has_many :messages, PmApi.Chat.Message
+    has_one :role, PmApi.Projectmode.Role
+    has_one :skill, PmApi.Projectmode.Skill
+    has_one :interest, PmApi.Projectmode.Interest
 
     timestamps()
   end

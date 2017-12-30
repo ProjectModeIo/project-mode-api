@@ -51,23 +51,23 @@ defmodule PmApiWeb.UserView do
     projects_role_related = PmApi.Projectmode.Project
     |> distinct(true)
     |> Project.filter_by({:role_match, user})
-    |> Repo.all()
+    |> Projectmode.list_projects()
 
     projects_interest_related = PmApi.Projectmode.Project
     |> distinct(true)
     |> Project.filter_by({:interest_match, user})
-    |> Repo.all()
+    |> Projectmode.list_projects()
 
     projects_skill_related = PmApi.Projectmode.Project
     |> distinct(true)
     |> Project.filter_by({:skill_match, user})
-    |> Repo.all()
+    |> Projectmode.list_projects()
 
     projects_recommended = PmApi.Projectmode.Project
     |> distinct(true)
     |> Project.filter_by({:skill_match, user})
     |> Project.filter_by({:interest_match, user})
-    |> Repo.all()
+    |> Projectmode.list_projects()
 
     %{
       projects_role_related: render_many(projects_role_related, PmApiWeb.ProjectView, "project.json"),

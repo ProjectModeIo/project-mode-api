@@ -14,4 +14,8 @@ defmodule PmApiWeb.RoleView do
     %{id: role.id,
       name: role.name}
   end
+
+  def render("role_projonly.json", %{role: role}) do
+    %{projects: render_many(role.projects, PmApiWeb.ProjectView, "name_only.json")}
+  end
 end

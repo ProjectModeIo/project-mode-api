@@ -79,6 +79,17 @@ defmodule PmApi.Projectmode do
       comments: [:user]])
   end
 
+  def list_projects(query) do
+    query
+    |> Repo.all()
+    |> Repo.preload([
+      :user,
+      projectroles: [:role],
+      projectskills: [:skill],
+      projectinterests: [:interest],
+      comments: [:user]])
+  end
+
   def get_project!(id) do
     project = Repo.get!(Project, id)
     |> Repo.preload([:user])
@@ -480,11 +491,6 @@ defmodule PmApi.Projectmode do
     Comment.changeset(comment, %{})
   end
 
-  # channels ?
-  def list_channels do
-
-  end
-
   alias PmApi.Projectmode.Channel
 
   @doc """
@@ -516,18 +522,11 @@ defmodule PmApi.Projectmode do
   """
   def get_channel!(id), do: Repo.get!(Channel, id)
 
-  @doc """
-  Creates a channel.
+  def get_channel_by_slug(slug) do
+    name = slug |> String.replace("-"," ")
+    channel = Repo.get_by(Channel, %{name: name})
+  end
 
-  ## Examples
-
-      iex> create_channel(%{field: value})
-      {:ok, %Channel{}}
-
-      iex> create_channel(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_channel(attrs \\ %{}) do
     %Channel{}
     |> Channel.changeset(attrs)
@@ -605,6 +604,14 @@ defmodule PmApi.Projectmode do
       projectskills: [:skill],
       projectinterests: [:interest],
       comments: [:user]])
+  end
+
+  def channel_preloads(%Channel{} = channel) do
+    channel |> Repo.preload([
+      role: [projects: [:user]],
+      skill: [projects: [:user]],
+      interest: [projects: [:user]]
+      ])
   end
 
   def comment_preloads(%Comment{} = comment) do

@@ -14,4 +14,8 @@ defmodule PmApiWeb.InterestView do
     %{id: interest.id,
       name: interest.name}
   end
+
+  def render("interest_projonly.json", %{interest: interest}) do
+    %{projects: render_many(interest.projects, PmApiWeb.ProjectView, "name_only.json")}
+  end
 end

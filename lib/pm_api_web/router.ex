@@ -30,12 +30,13 @@ defmodule PmApiWeb.Router do
     post "/sessions", SessionController, :create #login
     get "/load", SessionController, :load #loadAllThings in react app
     resources "/channels", ChannelController, only: [:index, :show]
-    resources "/users", UserController, only: [:create]
+    resources "/users", UserController, only: [:create, :show]
     resources "/projects", ProjectController, only: [:index, :show]
     resources "/roles", RoleController, only: [:index, :show]
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
     get "/projectslug/:slug", ProjectController, :showslug
+    get "/channelslug/:slug", ChannelController, :showslug
   end
 
   scope "/api/v1", PmApiWeb do
@@ -47,7 +48,7 @@ defmodule PmApiWeb.Router do
     patch "/users/update", UserController, :update
 
     #user
-    resources "/users", UserController, only: [:show, :delete]
+    resources "/users", UserController, only: [:delete]
     patch "/edituser", UserController, :update
     resources "/userroles", UserroleController, only: [:create, :delete]
     resources "/userskills", UserskillController, only: [:create, :delete]
