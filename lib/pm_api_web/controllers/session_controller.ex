@@ -16,7 +16,7 @@ defmodule PmApiWeb.SessionController do
 
         new_conn
         |> put_status(:created)
-        |> render("show.json", user: user, jwt: jwt)
+        |> render("show.json", user: user |> Projectmode.user_preloads(), jwt: jwt)
       :error ->
         conn
         |> put_status(:unauthorized)
@@ -27,9 +27,9 @@ defmodule PmApiWeb.SessionController do
   def current(conn, _) do
     token = Enum.at(get_req_header(conn, "token"), 0)
     case Guardian.resource_from_token(token) do
-      {:ok, user, _claims} ->
+      {:ok, user, claims} ->
         conn
-        |> render("show.json", user: user, jwt: token)
+        |> render("show.json", user: user |> Projectmode.user_preloads(), jwt: token)
       :error ->
         conn
         |> put_status(:unauthorized)
@@ -39,7 +39,6 @@ defmodule PmApiWeb.SessionController do
 
   def delete(conn, _) do
     jwt = Guardian.Plug.current_token(conn)
-    IEx.pry
     # Guardian.revoke(jwt)
     #
     # conn
@@ -56,7 +55,7 @@ defmodule PmApiWeb.SessionController do
       {:ok, old_stuff, {new_jwt, new_claims}} ->
         conn
         |> put_status(:ok)
-        |> render("show.json", user: user, jwt: new_jwt)
+        |> render("show.json", user: user |> Projectmode.user_preloads(), jwt: new_jwt)
       {:error, _reason} ->
         conn
         |> put_status(:unauthorized)

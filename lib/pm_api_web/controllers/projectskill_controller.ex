@@ -9,7 +9,7 @@ defmodule PmApiWeb.ProjectskillController do
 
   def index(conn, _params) do
     projectskills = Projectmode.list_projectskills()
-    render(conn, "index.json", projectskills: projectskills)
+    render(conn, "index.json", projectskills: projectskills |> PmApi.Repo.preload([:skill]))
   end
 
   def create(conn, %{"project_id" => project_id, "name" => name}) do
@@ -19,7 +19,7 @@ defmodule PmApiWeb.ProjectskillController do
         with {:ok, %Projectskill{} = projectskill } <- Projectmode.create_projectskill(%{project_id: project_id, skill_id: skill.id}) do
           conn
           |> put_status(:created)
-          |> render("show.json", projectskill: projectskill)
+          |> render("show.json", projectskill: projectskill |> PmApi.Repo.preload([:skill]))
         end
       _ ->
         conn
@@ -29,14 +29,14 @@ defmodule PmApiWeb.ProjectskillController do
 
   def show(conn, %{"id" => id}) do
     projectskill = Projectmode.get_projectskill!(id)
-    render(conn, "show.json", projectskill: projectskill)
+    render(conn, "show.json", projectskill: projectskill |> PmApi.Repo.preload([:skill]))
   end
 
   def update(conn, %{"id" => id, "projectskill" => projectskill_params}) do
     projectskill = Projectmode.get_projectskill!(id)
 
     with {:ok, %Projectskill{} = projectskill} <- Projectmode.update_projectskill(projectskill, projectskill_params) do
-      render(conn, "show.json", projectskill: projectskill)
+      render(conn, "show.json", projectskill: projectskill |> PmApi.Repo.preload([:skill]))
     end
   end
 

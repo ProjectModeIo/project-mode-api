@@ -12,7 +12,6 @@ defmodule PmApiWeb.CommentView do
   end
 
   def render("comment.json", %{comment: comment}) do
-    comment = comment |> PmApi.Repo.preload([:user])
     #in projects comments, only include top level, rest will come with loop?
 
     %{

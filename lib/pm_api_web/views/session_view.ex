@@ -18,8 +18,8 @@ defmodule PmApiWeb.SessionView do
 
   def render("load.json", _) do
     #corresponds to loadAllThings in react app
-    projects_all = PmApi.Projectmode.Project |> Repo.all()
-    channels_all = PmApi.Projectmode.Channel |> Repo.all()
+    projects_all = Projectmode.list_projects
+    channels_all = Projectmode.Channel |> Repo.all()
 
     %{
       feed: %{

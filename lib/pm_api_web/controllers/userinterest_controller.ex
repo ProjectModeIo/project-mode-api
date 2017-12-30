@@ -20,7 +20,7 @@ defmodule PmApiWeb.UserinterestController do
             userinterest = userinterest |> PmApi.Repo.preload([:interest])
             conn
             |> put_status(:created)
-            |> render("show.json", userinterest: userinterest, user: current_user)
+            |> render("show.json", userinterest: userinterest, user: current_user |> Projectmode.user_preloads())
           end
         end
       _ ->
@@ -49,7 +49,7 @@ defmodule PmApiWeb.UserinterestController do
         if to_string(current_user.id) == to_string(userinterest.user_id) do
           with {:ok, %Userinterest{}} <- Projectmode.delete_userinterest(userinterest) do
             conn
-            |> render("deleted.json", old_id: id, user: current_user)
+            |> render("deleted.json", old_id: id, user: current_user |> Projectmode.user_preloads())
           end
         end
       _ ->

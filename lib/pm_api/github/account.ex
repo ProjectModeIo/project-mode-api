@@ -11,6 +11,8 @@ defmodule PmApi.Github.Account do
     field :totalcommits, :integer
     field :totalorganizations, :integer
     field :totalprojects, :integer
+    field :access_token, :string
+    field :user_info_json, :string
     belongs_to :user, PmApi.Projectmode.User
 
     timestamps()
@@ -19,8 +21,8 @@ defmodule PmApi.Github.Account do
   @doc false
   def changeset(%Account{} = account, attrs) do
     account
-    |> cast(attrs, [:projects_json, :commits_json, :organizations_json, :totalprojects, :totalcommits, :totalorganizations, :user_id])
-    |> validate_required([:projects_json, :commits_json, :organizations_json, :totalprojects, :totalcommits, :totalorganizations, :user_id])
+    |> cast(attrs, [:access_token, :user_info_json, :projects_json, :commits_json, :organizations_json, :totalprojects, :totalcommits, :totalorganizations, :user_id])
+    |> validate_required([:access_token, :user_id])
     |> unique_constraint(:user_id)
   end
 end

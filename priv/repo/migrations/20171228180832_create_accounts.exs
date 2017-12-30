@@ -3,9 +3,11 @@ defmodule PmApi.Repo.Migrations.CreateAccounts do
 
   def change do
     create table(:accounts) do
-      add :projects_json, :string
-      add :commits_json, :string
-      add :organizations_json, :string
+      add :access_token, :string
+      add :user_info_json, :text
+      add :projects_json, :text
+      add :commits_json, :text
+      add :organizations_json, :text
       add :totalprojects, :integer
       add :totalcommits, :integer
       add :totalorganizations, :integer

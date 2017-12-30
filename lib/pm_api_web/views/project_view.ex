@@ -12,7 +12,7 @@ defmodule PmApiWeb.ProjectView do
 
   def render("project.json", %{project: project}) do
     # comment_query = from(c in Comments, where: is_nil(parent_id))
-    project = project|> PmApi.Repo.preload([:user, :projectroles, :projectskills, :projectinterests, :comments])
+    # project = project|> PmApi.Repo.preload([:user, :projectroles, :projectskills, :projectinterests, :comments])
     %{
       id: project.id,
       title: project.title,

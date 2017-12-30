@@ -11,7 +11,7 @@ defmodule PmApiWeb.ProjectController do
 
     projects = Projectmode.list_projects()
 
-    render(conn, "index.json", projects: projects)
+    render(conn, "index.json", projects: projects |> PmApi.Projectmode.project_preloads())
   end
 
   def create(conn, %{"project" => project_params}) do
@@ -21,7 +21,7 @@ defmodule PmApiWeb.ProjectController do
         with {:ok, %Project{} = project} <- Projectmode.create_project(project_params) do
           conn
           |> put_status(:created)
-          |> render("show.json", project: project)
+          |> render("show.json", project: project |> PmApi.Projectmode.project_preloads())
         end
       _ ->
       conn
@@ -32,13 +32,13 @@ defmodule PmApiWeb.ProjectController do
   def show(conn, %{"id" => id}) do
     # IEx.pry
     project = Projectmode.get_project!(id)
-    render(conn, "show.json", project: project)
+    render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
   end
 
   def showslug(conn, %{"slug" => slug}) do
     # IEx.pry
     project = Projectmode.get_project_by_slug(slug)
-    render(conn, "show.json", project: project)
+    render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
   end
 
   def update(conn, %{"id" => id, "project" => project_params}) do
@@ -46,7 +46,7 @@ defmodule PmApiWeb.ProjectController do
     project = Projectmode.get_project!(id)
 
     with {:ok, %Project{} = project} <- Projectmode.update_project(project, project_params) do
-      render(conn, "show.json", project: project)
+      render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
     end
   end
 

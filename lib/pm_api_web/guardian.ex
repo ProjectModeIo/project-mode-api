@@ -16,6 +16,22 @@ defmodule PmApiWeb.Guardian do
     {:error, :reason_for_error}
   end
 
+  # def get_claim(conn, claim_name) do
+  #   claim = Guardian.Plug.current_claims(conn)
+  #   claim[claim_name]
+  # end
+
+  def add_claim_to_resource(conn, %{new_claim: new_claim}) do
+    # remove maybe
+    case Guardian.Plug.current_claims(conn) |> resource_from_claims() do
+      {:ok, resource} ->
+        {:ok, _, claims} = PmApiWeb.Guardian.encode_and_sign(resource, new_claim)
+        {:ok, claims}
+      _ ->
+        {:error, :not_found}
+    end
+  end
+
   def resource_from_claims(claims) do
     # Here we'll look up our resource from the claims, the subject can be
     # found in the `"sub"` key. In `above subject_for_token/2` we returned

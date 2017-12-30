@@ -10,7 +10,7 @@ defmodule PmApiWeb.ProjectroleController do
 
   def index(conn, _params) do
     projectroles = Projectmode.list_projectroles()
-    render(conn, "index.json", projectroles: projectroles)
+    render(conn, "index.json", projectroles: projectroles |> PmApi.Repo.preload([:role]))
   end
 
   def create(conn, %{"project_id" => project_id, "name" => name}) do
@@ -21,7 +21,7 @@ defmodule PmApiWeb.ProjectroleController do
         with {:ok, %Projectrole{} = projectrole } <- Projectmode.create_projectrole(%{project_id: project_id, role_id: role.id}) do
           conn
           |> put_status(:created)
-          |> render("show.json", projectrole: projectrole)
+          |> render("show.json", projectrole: projectrole |> PmApi.Repo.preload([:role]))
         end
       _ ->
         conn
@@ -31,14 +31,14 @@ defmodule PmApiWeb.ProjectroleController do
 
   def show(conn, %{"id" => id}) do
     projectrole = Projectmode.get_projectrole!(id)
-    render(conn, "show.json", projectrole: projectrole)
+    render(conn, "show.json", projectrole: projectrole |> PmApi.Repo.preload([:role]))
   end
 
   def update(conn, %{"id" => id, "projectrole" => projectrole_params}) do
     projectrole = Projectmode.get_projectrole!(id)
 
     with {:ok, %Projectrole{} = projectrole} <- Projectmode.update_projectrole(projectrole, projectrole_params) do
-      render(conn, "show.json", projectrole: projectrole)
+      render(conn, "show.json", projectrole: projectrole |> PmApi.Repo.preload([:role]))
     end
   end
 

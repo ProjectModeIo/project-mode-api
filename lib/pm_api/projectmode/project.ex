@@ -3,6 +3,7 @@ defmodule PmApi.Projectmode.Project do
   import Ecto.Changeset
   import Ecto.Query
   alias PmApi.Projectmode.Project
+  alias PmApi.Projectmode.Channel
 
 
   schema "projects" do
@@ -10,7 +11,8 @@ defmodule PmApi.Projectmode.Project do
     field :title, :string
     field :slug, :string
     field :project_scope, :string
-    field :repositories, :string
+    field :github_owner, :string
+    field :github_repo, :string
     field :active, :boolean
     # field :user_id, :id
 
@@ -29,7 +31,7 @@ defmodule PmApi.Projectmode.Project do
   @doc false
   def changeset(%Project{} = project, attrs) do
     project
-    |> cast(attrs, [:title, :description, :user_id, :project_scope, :repositories, :active])
+    |> cast(attrs, [:title, :description, :user_id, :project_scope, :github_owner, :github_repo, :active])
     |> validate_required([:title, :description, :user_id])
     |> validate_inclusion(:project_scope, ["passion project","experiment","business opportunity","just for fun","learning opportunity"])
     |> validate_exclusion(:title, ["profile","edit","new","delete","dashboard"])
@@ -52,6 +54,8 @@ defmodule PmApi.Projectmode.Project do
   defp insert_and_get_all(objs, schema) do
     roles = Enum.map(objs, &(&1[:name]))
     objs = objs |> Enum.map(fn(row) -> row |> Map.put(:inserted_at, DateTime.utc_now) |> Map.put(:updated_at, DateTime.utc_now) end)
+    PmApi.Repo.insert_all(Channel, objs, on_conflict: :nothing)
+    objs = objs |> Enum.map(fn(row) -> row |> Map.put(:channel_id, PmApi.Repo.get_by(Channel, %{name: row.name}).id) end)
     PmApi.Repo.insert_all(schema, objs, on_conflict: :nothing)
     PmApi.Repo.all(from r in schema, where: r.name in ^roles)
   end

@@ -9,7 +9,7 @@ defmodule PmApiWeb.CommentController do
 
   def index(conn, _params) do
     comments = Projectmode.list_comments()
-    render(conn, "index.json", comments: comments)
+    render(conn, "index.json", comments: comments |> PmApi.Projectmode.comment_preloads())
   end
 
   def create(conn, %{"comment" => comment_params}) do
@@ -19,7 +19,7 @@ defmodule PmApiWeb.CommentController do
         with {:ok, %Comment{} = comment} <- Projectmode.create_comment(comment_params) do
           conn
           |> put_status(:created)
-          |> render("show.json", comment: comment)
+          |> render("show.json", comment: comment |> PmApi.Projectmode.comment_preloads())
         end
       _ ->
       conn
@@ -37,14 +37,14 @@ defmodule PmApiWeb.CommentController do
 
   def show(conn, %{"id" => id}) do
     comment = Projectmode.get_comment!(id)
-    render(conn, "show.json", comment: comment)
+    render(conn, "show.json", comment: comment |> PmApi.Projectmode.comment_preloads())
   end
 
   def update(conn, %{"id" => id, "comment" => comment_params}) do
     comment = Projectmode.get_comment!(id)
 
     with {:ok, %Comment{} = comment} <- Projectmode.update_comment(comment, comment_params) do
-      render(conn, "show.json", comment: comment)
+      render(conn, "show.json", comment: comment |> PmApi.Projectmode.comment_preloads())
     end
   end
 

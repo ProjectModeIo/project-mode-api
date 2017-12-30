@@ -13,7 +13,7 @@ defmodule PmApi.Projectmode.User do
     field :password_hash, :string
     field :tagline, :string
     field :contact_info, :string
-    has_one :github_account, PmApi.Github.Account
+    has_one :account, PmApi.Github.Account
     has_many :userroles, PmApi.Projectmode.Userrole
     has_many :userskills, PmApi.Projectmode.Userskill
     has_many :userinterests, PmApi.Projectmode.Userinterest

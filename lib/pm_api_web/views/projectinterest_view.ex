@@ -11,7 +11,7 @@ defmodule PmApiWeb.ProjectinterestView do
   end
 
   def render("projectinterest.json", %{projectinterest: projectinterest}) do
-    projectinterest = projectinterest |> PmApi.Repo.preload([:interest])
+    # projectinterest = projectinterest |> PmApi.Repo.preload([:interest])
     %{
       id: projectinterest.id,
       name: projectinterest.interest.name

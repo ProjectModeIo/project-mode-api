@@ -3,10 +3,10 @@ defmodule PmApi.Repo.Migrations.CreateRoles do
 
   def change do
     create table(:roles) do
-      add :type, :string
+      add :name, :string
 
       timestamps()
     end
-
+    create index(:roles, [:name], unique: true)
   end
 end

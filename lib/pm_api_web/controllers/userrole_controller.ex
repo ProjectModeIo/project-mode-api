@@ -71,7 +71,7 @@ defmodule PmApiWeb.UserroleController do
         if to_string(current_user.id) == to_string(userrole.user_id) do
           with {:ok, %Userrole{}} <- Projectmode.delete_userrole(userrole) do
             conn
-            |> render("deleted.json", old_id: id, user: current_user)
+            |> render("deleted.json", old_id: id, user: current_user |> Projectmode.user_preloads())
           end
         end
       _ ->

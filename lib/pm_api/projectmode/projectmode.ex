@@ -71,6 +71,12 @@ defmodule PmApi.Projectmode do
 
   def list_projects do
     Repo.all(Project)
+    |> Repo.preload([
+      :user,
+      projectroles: [:role],
+      projectskills: [:skill],
+      projectinterests: [:interest],
+      comments: [:user]])
   end
 
   def get_project!(id) do
@@ -573,5 +579,35 @@ defmodule PmApi.Projectmode do
   """
   def change_channel(%Channel{} = channel) do
     Channel.changeset(channel, %{})
+  end
+
+  # PRELOADS
+  def user_preloads(%User{} = user) do
+    user |> Repo.preload([
+      :account,
+      projects: [
+        :user,
+        projectroles: [:role],
+        projectskills: [:skill],
+        projectinterests: [:interest],
+        comments: [:user]
+      ],
+      userroles: [:role],
+      userinterests: [:interest],
+      userskills: [:skill]
+      ])
+  end
+
+  def project_preloads(%Project{} = project) do
+    project |> Repo.preload([
+      :user,
+      projectroles: [:role],
+      projectskills: [:skill],
+      projectinterests: [:interest],
+      comments: [:user]])
+  end
+
+  def comment_preloads(%Comment{} = comment) do
+    comment |> Repo.preload([:user])
   end
 end

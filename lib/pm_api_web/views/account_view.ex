@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.AccountView do
   use PmApiWeb, :view
   alias PmApiWeb.AccountView
@@ -12,11 +13,6 @@ defmodule PmApiWeb.AccountView do
 
   def render("account.json", %{account: account}) do
     %{id: account.id,
-      projects_json: account.projects_json,
-      commits_json: account.commits_json,
-      organizations_json: account.organizations_json,
-      totalprojects: account.totalprojects,
-      totalcommits: account.totalcommits,
-      totalorganizations: account.totalorganizations}
+      user_info_json: account.user_info_json}
   end
 end

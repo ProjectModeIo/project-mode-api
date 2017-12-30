@@ -17,4 +17,10 @@ defmodule PmApiWeb.FallbackController do
     |> put_status(:not_found)
     |> render(PmApiWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, catchall}) do
+    conn
+    |> put_status(:not_found)
+    |> render(PmApiWeb.ErrorView, :"404")
+  end
 end

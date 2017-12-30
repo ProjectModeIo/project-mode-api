@@ -10,7 +10,7 @@ defmodule PmApiWeb.ProjectinterestController do
 
   def index(conn, _params) do
     projectinterests = Projectmode.list_projectinterests()
-    render(conn, "index.json", projectinterests: projectinterests)
+    render(conn, "index.json", projectinterests: projectinterests |> PmApi.Repo.preload([:interest]))
   end
 
   def create(conn, %{"project_id" => project_id, "name" => name}) do
@@ -20,7 +20,7 @@ defmodule PmApiWeb.ProjectinterestController do
         with {:ok, %Projectinterest{} = projectinterest } <- Projectmode.create_projectinterest(%{project_id: project_id, interest_id: interest.id}) do
           conn
           |> put_status(:created)
-          |> render("show.json", projectinterest: projectinterest)
+          |> render("show.json", projectinterest: projectinterest |> PmApi.Repo.preload([:interest]))
         end
       _ ->
         conn
@@ -30,14 +30,14 @@ defmodule PmApiWeb.ProjectinterestController do
 
   def show(conn, %{"id" => id}) do
     projectinterest = Projectmode.get_projectinterest!(id)
-    render(conn, "show.json", projectinterest: projectinterest)
+    render(conn, "show.json", projectinterest: projectinterest |> PmApi.Repo.preload([:interest]))
   end
 
   def update(conn, %{"id" => id, "projectinterest" => projectinterest_params}) do
     projectinterest = Projectmode.get_projectinterest!(id)
 
     with {:ok, %Projectinterest{} = projectinterest} <- Projectmode.update_projectinterest(projectinterest, projectinterest_params) do
-      render(conn, "show.json", projectinterest: projectinterest)
+      render(conn, "show.json", projectinterest: projectinterest |> PmApi.Repo.preload([:interest]))
     end
   end
 

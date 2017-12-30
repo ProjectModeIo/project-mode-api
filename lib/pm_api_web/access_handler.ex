@@ -6,11 +6,11 @@ defmodule PmApi.AccessHandler do
   alias PmApi.Projectmode
   alias PmApi.Repo
 
-  #resource = %{ project_id: project_id }
+  #resource = %{ project_id: project_id } - verifies that the current logged in user is the resource owner
   def verify_resource_owner(conn, resource) do
     case get_logged_in_user(conn) do
       {:ok, current_user} ->
-        project = get_resource(resource)
+        resource = get_resource(resource)
         |> verify_owner(current_user)
       _ -> {:error, "not logged in"}
     end

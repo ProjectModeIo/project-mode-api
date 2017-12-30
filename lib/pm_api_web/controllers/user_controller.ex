@@ -11,7 +11,7 @@ defmodule PmApiWeb.UserController do
 
   def index(conn, _params) do
     users = Projectmode.list_users()
-    render(conn, "index.json", users: users)
+    render(conn, "index.json", users: users |> Projectmode.user_preloads())
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -24,7 +24,7 @@ defmodule PmApiWeb.UserController do
 
         new_conn
         |> put_status(:created)
-        |> render(PmApiWeb.SessionView, "show.json", user: user, jwt: jwt)
+        |> render(PmApiWeb.SessionView, "show.json", user: user |> Projectmode.user_preloads(), jwt: jwt)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -32,9 +32,15 @@ defmodule PmApiWeb.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Projectmode.get_user!(id)
-    render(conn, "show.json", user: user)
+  def show(conn, params) do
+    #id is technically username, edit this later
+    case Projectmode.get_user_by(%{username: params["id"]}) do
+      %User{} = user ->
+        conn
+        |> put_status(:ok)
+        |> render("profile.json", user: user |> Projectmode.user_preloads())
+      _ -> {:error, :not_found}
+    end
   end
 
   def update(conn, %{"user" => user_params}) do
@@ -48,7 +54,7 @@ defmodule PmApiWeb.UserController do
         with {:ok, %User{} = user } <- Projectmode.update_user(user, user_params) do
           conn
           |> put_status(:ok)
-          |> render("show.json", user: user)
+          |> render("show.json", user: user |> Projectmode.user_preloads())
         end
       _ ->
         conn

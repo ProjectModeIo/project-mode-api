@@ -36,7 +36,6 @@ defmodule PmApiWeb.Router do
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
     get "/projectslug/:slug", ProjectController, :showslug
-    get "/github", HttprequestsController, :github
   end
 
   scope "/api/v1", PmApiWeb do
@@ -64,7 +63,8 @@ defmodule PmApiWeb.Router do
     resources "/comments", CommentController, only: [:create]
 
     #link stuff like github
-    resources "/github", AccountController, only: [:create, :delete, :show, :update]
+    post "/github_callback", GithubController, :github_callback
+    # resources "/github", RepoController, only: [:create, :delete, :show, :update]
 
   end
 end

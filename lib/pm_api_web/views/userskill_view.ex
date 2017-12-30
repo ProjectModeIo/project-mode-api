@@ -11,7 +11,7 @@ defmodule PmApiWeb.UserskillView do
   end
 
   def render("userskill.json", %{userskill: userskill}) do
-    userskill = userskill |> PmApi.Repo.preload([:skill])
+    # userskill = userskill |> PmApi.Repo.preload([:skill])
     %{
       id: userskill.id,
       name: userskill.skill.name

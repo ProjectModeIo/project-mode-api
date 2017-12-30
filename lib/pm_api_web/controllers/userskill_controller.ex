@@ -50,7 +50,7 @@ defmodule PmApiWeb.UserskillController do
         if to_string(current_user.id) == to_string(userskill.user_id) do
           with {:ok, %Userskill{}} <- Projectmode.delete_userskill(userskill) do
             conn
-            |> render("deleted.json", old_id: id, user: current_user)
+            |> render("deleted.json", old_id: id, user: current_user |> Projectmode.user_preloads())
           end
         end
       _ ->
