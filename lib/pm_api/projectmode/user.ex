@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApi.Projectmode.User do
   use Ecto.Schema
   import Ecto.Changeset
@@ -29,11 +30,18 @@ defmodule PmApi.Projectmode.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :firstname, :lastname, :tagline, :username])
-    |> validate_required([:email, :firstname, :lastname, :username])
+    |> cast(attrs, [:email, :firstname, :lastname, :tagline])
+    |> validate_required([:email])
+    |> validate_username(attrs)
+    |> unique_constraint(:email)
+  end
+
+  def validate_username(struct, params) do
+    struct
+    |> cast(params, [:username])
     |> validate_format(:username, ~r/^[a-zA-Z0-9-_]+$/)
     |> validate_exclusion(:username, ['profile','edit','new','delete','dashboard','admin','superadmin'])
-    |> unique_constraint(:email)
+    |> validate_length(:username, min: 4, max: 25)
     |> unique_constraint(:username)
   end
 

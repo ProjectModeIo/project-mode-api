@@ -11,6 +11,18 @@ defmodule PmApiWeb.UserView do
   #   %{data: render_many(users, UserView, "user.json")}
   # end
   #
+  def render("validated.json", _params) do
+    %{
+      status: "ok"
+    }
+  end
+
+  def render("notvalidated.json", _params) do
+    %{
+      status: "already exists"
+    }
+  end
+
   def render("profile.json", %{user: user}) do
     %{id: user.id,
       username: user.username,

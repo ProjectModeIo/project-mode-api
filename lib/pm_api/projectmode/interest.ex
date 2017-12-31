@@ -11,7 +11,7 @@ defmodule PmApi.Projectmode.Interest do
     has_many :projectinterests, PmApi.Projectmode.Projectinterest
     belongs_to :channel, PmApi.Projectmode.Channel
 
-    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectrole
+    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectinterest
     timestamps()
   end
 

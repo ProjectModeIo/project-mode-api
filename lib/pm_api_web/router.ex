@@ -27,9 +27,10 @@ defmodule PmApiWeb.Router do
   scope "/api/v1", PmApiWeb do
     pipe_through [:api]
 
+    post "/validate", UserController, :validate #validate unique constraints
     post "/sessions", SessionController, :create #login
     get "/load", SessionController, :load #loadAllThings in react app
-    resources "/channels", ChannelController, only: [:index, :show]
+    resources "/channels", ChannelController, only: [:index]
     resources "/users", UserController, only: [:create, :show]
     resources "/projects", ProjectController, only: [:index, :show]
     resources "/roles", RoleController, only: [:index, :show]

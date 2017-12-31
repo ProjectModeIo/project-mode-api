@@ -11,7 +11,7 @@ defmodule PmApi.Projectmode.Skill do
     has_many :projectskills, PmApi.Projectmode.Projectskill
     belongs_to :channel, PmApi.Projectmode.Channel
 
-    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectrole
+    many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectskill
     timestamps()
   end
 

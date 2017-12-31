@@ -32,6 +32,27 @@ defmodule PmApiWeb.UserController do
     end
   end
 
+  def validate(conn, %{"email" => email}) do
+    validate(conn, %{user: PmApi.Repo.get_by(User, %{email: email})})
+  end
+
+  def validate(conn, %{"username" => username}) do
+    validate(conn, %{user: PmApi.Repo.get_by(User, %{username: username})})
+  end
+
+  def validate(conn, %{user: user}) do
+    case user do
+      %User{} = user ->
+        conn
+        |> put_status(:ok)
+        |> render("notvalidated.json")
+      _ ->
+        conn
+        |> put_status(:ok)
+        |> render("validated.json")
+    end
+  end
+
   def show(conn, params) do
     #id is technically username, edit this later
     case Projectmode.get_user_by(%{username: params["id"]}) do
