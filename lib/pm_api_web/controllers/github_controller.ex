@@ -14,7 +14,7 @@ defmodule PmApiWeb.GithubController do
           {:ok, user_info_json} = Poison.encode(user_info)
           with {:ok, account} <- PmApi.Github.create_or_update_account(current_user, %{
             user_id: current_user.id,
-            access_token: github_access_token, 
+            access_token: github_access_token,
             user_info_json: user_info_json }) do
             conn
             # |> Plug.Conn.fetch_session()

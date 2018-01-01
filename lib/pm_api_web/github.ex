@@ -22,7 +22,6 @@ defmodule PmApiWeb.Github do
           {:error, :not_found}
         end
       %HTTPotion.ErrorResponse{} = error ->
-        IEx.pry
         {:error, error}
     end
   end
