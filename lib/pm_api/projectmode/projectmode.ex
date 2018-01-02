@@ -72,7 +72,7 @@ defmodule PmApi.Projectmode do
   def list_projects do
     Repo.all(Project)
     |> Repo.preload([
-      :user,
+      :user, #:watchedprojects,
       projectroles: [:role],
       projectskills: [:skill],
       projectinterests: [:interest],
@@ -95,9 +95,16 @@ defmodule PmApi.Projectmode do
     |> Repo.preload([:user])
   end
 
-  def get_project_by_slug(slug) do
-    project = Repo.get_by(Project, %{slug: slug})
+  def get_project_by_slug(username, slug) do
+    query = from p in Project,
+      join: u in assoc(p, :user),
+      where: p.slug == ^slug and u.username == ^username
+
+    Repo.one(query)
     |> Repo.preload([:user])
+    #
+    # project = Repo.get_by(Project, %{slug: slug})
+    # |> Repo.preload([:user])
   end
 
   def create_project(attrs \\ %{}) do
@@ -585,7 +592,7 @@ defmodule PmApi.Projectmode do
     user |> Repo.preload([
       :account,
       projects: [
-        :user,
+        :user, #:watchedprojects,
         projectroles: [:role],
         projectskills: [:skill],
         projectinterests: [:interest],
@@ -599,19 +606,44 @@ defmodule PmApi.Projectmode do
 
   def project_preloads(%Project{} = project) do
     project |> Repo.preload([
-      :user,
+      :user, #:watchedprojects,
       projectroles: [:role],
       projectskills: [:skill],
       projectinterests: [:interest],
-      comments: [:user]])
+      comments: [:user]
+    ])
   end
 
   def channel_preloads(%Channel{} = channel) do
     channel |> Repo.preload([
-      role: [projects: [:user]],
-      skill: [projects: [:user]],
-      interest: [projects: [:user]]
-      ])
+      role: [
+        projects: [
+          :user, #:watchedprojects,
+          projectroles: [:role],
+          projectskills: [:skill],
+          projectinterests: [:interest],
+          comments: [:user],
+        ]
+      ],
+      skill: [
+        projects: [
+          :user, #:watchedprojects,
+          projectroles: [:role],
+          projectskills: [:skill],
+          projectinterests: [:interest],
+          comments: [:user]
+        ]
+      ],
+      interest: [
+        projects: [
+          :user, #:watchedprojects,
+          projectroles: [:role],
+          projectskills: [:skill],
+          projectinterests: [:interest],
+          comments: [:user]
+        ]
+      ],
+    ])
   end
 
   def comment_preloads(%Comment{} = comment) do

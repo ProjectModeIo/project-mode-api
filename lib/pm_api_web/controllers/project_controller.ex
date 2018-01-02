@@ -35,9 +35,8 @@ defmodule PmApiWeb.ProjectController do
     render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
   end
 
-  def showslug(conn, %{"slug" => slug}) do
-    # IEx.pry
-    project = Projectmode.get_project_by_slug(slug)
+  def showslug(conn, %{"slug" => slug, "username" => username}) do
+    project = Projectmode.get_project_by_slug(username, slug)
     render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
   end
 

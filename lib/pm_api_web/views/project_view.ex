@@ -21,6 +21,7 @@ defmodule PmApiWeb.ProjectView do
       inserted_at: project.inserted_at,
       updated_at: project.updated_at,
       slug: project.slug,
+      # watchedprojects: render_many(project.watchedprojects, PmApiWeb.WatchedprojectView, "watchedproject.json"),
       roles: render_many(project.projectroles, PmApiWeb.ProjectroleView, "projectrole.json"),
       skills: render_many(project.projectskills, PmApiWeb.ProjectskillView, "projectskill.json"),
       interests: render_many(project.projectinterests, PmApiWeb.ProjectinterestView, "projectinterest.json"),

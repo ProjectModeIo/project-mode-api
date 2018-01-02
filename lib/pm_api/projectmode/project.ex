@@ -4,6 +4,7 @@ defmodule PmApi.Projectmode.Project do
   import Ecto.Query
   alias PmApi.Projectmode.Project
   alias PmApi.Projectmode.Channel
+  alias PmApi.Repo
 
 
   schema "projects" do
@@ -23,6 +24,7 @@ defmodule PmApi.Projectmode.Project do
     many_to_many :roles, PmApi.Projectmode.Role, join_through: PmApi.Projectmode.Projectrole
     many_to_many :skills, PmApi.Projectmode.Skill, join_through: PmApi.Projectmode.Projectskill
     many_to_many :interests, PmApi.Projectmode.Interest, join_through: PmApi.Projectmode.Projectinterest
+    has_many :watchedprojects, PmApi.Projectmode.User
 
     has_many :comments, PmApi.Projectmode.Comment
     timestamps()
@@ -101,5 +103,30 @@ defmodule PmApi.Projectmode.Project do
       inner_join: ur in assoc(r, :userinterests),
       inner_join: u in assoc(ur, :user),
       where: u.id == ^user.id
+  end
+
+  def filter_by(query, {:channel_match, %PmApi.Projectmode.Channel{} = channel}) do
+    # doesn't work :( - figure out
+    # query = Project schema
+    filter1 = from p in query,
+      inner_join: pr in assoc(p, :projectroles),
+      inner_join: r in assoc(pr, :role),
+      inner_join: c in assoc(r, :channel),
+      where: c.id == ^channel.id
+
+    filter2 = from p in query,
+      inner_join: pi in assoc(p, :projectinterests),
+      inner_join: i in assoc(pi, :interest),
+      inner_join: c in assoc(i, :channel),
+      where: c.id == ^channel.id
+
+    filter3 = from p in query,
+      inner_join: ps in assoc(p, :projectskills),
+      inner_join: s in assoc(ps, :skill),
+      inner_join: c in assoc(s, :channel),
+      where: c.id == ^channel.id
+
+      # combined = Repo.to_sql(:all, filter1) <> " UNION " <> Repo.to_sql(:all, filter2) <> " UNION " <> Repo.to_sql(:all, filter3)
+      # Repo.query(combined)
   end
 end

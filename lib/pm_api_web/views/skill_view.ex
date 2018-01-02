@@ -16,6 +16,6 @@ defmodule PmApiWeb.SkillView do
   end
 
   def render("skill_projonly.json", %{skill: skill}) do
-    %{projects: render_many(skill.projects, PmApiWeb.ProjectView, "name_only.json")}
+    %{projects: render_many(skill.projects, PmApiWeb.ProjectView, "project.json")}
   end
 end

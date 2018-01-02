@@ -36,7 +36,7 @@ defmodule PmApiWeb.Router do
     resources "/roles", RoleController, only: [:index, :show]
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
-    get "/projectslug/:slug", ProjectController, :showslug
+    get "/projectslug/:username/:slug", ProjectController, :showslug
     get "/channelslug/:slug", ChannelController, :showslug
   end
 

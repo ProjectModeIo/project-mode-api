@@ -12,6 +12,7 @@ defmodule PmApiWeb.WatchedprojectView do
 
   def render("watchedproject.json", %{watchedproject: watchedproject}) do
     %{id: watchedproject.id,
-      interestlevel: watchedproject.interestlevel}
+      interestlevel: watchedproject.interestlevel,
+    }
   end
 end
