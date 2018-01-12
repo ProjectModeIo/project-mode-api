@@ -5,7 +5,9 @@ defmodule PmApi.Repo.Migrations.CreateProjects do
     create table(:projects) do
       add :title, :string
       add :description, :string
-      add :user_id, references(:users, on_delete: :nothing)
+      add :status, :string
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :team_id, references(:teams, on_delete: :nothing)
 
       timestamps()
     end

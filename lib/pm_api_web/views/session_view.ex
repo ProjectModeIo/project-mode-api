@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.SessionView do
   use PmApiWeb, :view
   alias PmApi.Projectmode
@@ -19,14 +20,16 @@ defmodule PmApiWeb.SessionView do
   def render("load.json", _) do
     #corresponds to loadAllThings in react app
     projects_all = Projectmode.list_projects
-    channels_all = Projectmode.Channel |> Repo.all()
+    channels_all = Projectmode.Channel
+    |> Repo.all()
+    |> Projectmode.channel_preloads()
 
     %{
       feed: %{
         projects_all: render_many(projects_all, PmApiWeb.ProjectView, "project.json")
       },
       channels: %{
-        allChannels: render_many(channels_all, PmApiWeb.ChannelView, "channel.json")
+        allChannels: render_many(channels_all, PmApiWeb.ChannelView, "channeldetails.json")
       }
     }
   end

@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.WatchedprojectController do
   use PmApiWeb, :controller
 
@@ -12,7 +13,7 @@ defmodule PmApiWeb.WatchedprojectController do
   end
 
   def create(conn, %{"watchedproject" => watchedproject_params}) do
-    with {:ok, %Watchedproject{} = watchedproject} <- Projectmode.create_watchedproject(watchedproject_params) do
+    with {:ok, %Watchedproject{} = watchedproject} <- Projectmode.create_or_update_watchedproject(watchedproject_params) do
       conn
       |> put_status(:created)
       # |> put_resp_header("location", watchedproject_path(conn, :show, watchedproject))

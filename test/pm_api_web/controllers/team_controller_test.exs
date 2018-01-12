@@ -1,15 +1,15 @@
 defmodule PmApiWeb.TeamControllerTest do
   use PmApiWeb.ConnCase
 
-  alias PmApi.Projectmode
-  alias PmApi.Projectmode.Team
+  alias PmApi.Network
+  alias PmApi.Network.Team
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
   @invalid_attrs %{name: nil}
 
   def fixture(:team) do
-    {:ok, team} = Projectmode.create_team(@create_attrs)
+    {:ok, team} = Network.create_team(@create_attrs)
     team
   end
 

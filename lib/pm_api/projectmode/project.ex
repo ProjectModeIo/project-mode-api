@@ -15,16 +15,20 @@ defmodule PmApi.Projectmode.Project do
     field :github_owner, :string
     field :github_repo, :string
     field :active, :boolean
+    field :status, :string
     # field :user_id, :id
 
     belongs_to :user, PmApi.Projectmode.User
+    belongs_to :team, PmApi.Network.Team
+
     has_many :projectroles, PmApi.Projectmode.Projectrole
     has_many :projectskills, PmApi.Projectmode.Projectskill
     has_many :projectinterests, PmApi.Projectmode.Projectinterest
     many_to_many :roles, PmApi.Projectmode.Role, join_through: PmApi.Projectmode.Projectrole
     many_to_many :skills, PmApi.Projectmode.Skill, join_through: PmApi.Projectmode.Projectskill
     many_to_many :interests, PmApi.Projectmode.Interest, join_through: PmApi.Projectmode.Projectinterest
-    has_many :watchedprojects, PmApi.Projectmode.User
+    has_many :watchedprojects, PmApi.Projectmode.Watchedproject
+    has_many :volunteers, PmApi.Network.Volunteer
 
     has_many :comments, PmApi.Projectmode.Comment
     timestamps()
@@ -33,7 +37,7 @@ defmodule PmApi.Projectmode.Project do
   @doc false
   def changeset(%Project{} = project, attrs) do
     project
-    |> cast(attrs, [:title, :description, :user_id, :project_scope, :github_owner, :github_repo, :active])
+    |> cast(attrs, [:title, :description, :user_id, :team_id, :project_scope, :github_owner, :github_repo, :active])
     |> validate_required([:title, :description, :user_id])
     |> validate_inclusion(:project_scope, ["passion project","experiment","business opportunity","just for fun","learning opportunity"])
     |> validate_exclusion(:title, ["profile","edit","new","delete","dashboard"])

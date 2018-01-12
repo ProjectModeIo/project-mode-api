@@ -15,7 +15,10 @@ defmodule PmApiWeb.RoleView do
       name: role.name}
   end
 
-  def render("role_projonly.json", %{role: role}) do
-    %{projects: render_many(role.projects, PmApiWeb.ProjectView, "project.json")}
+  def render("role_connections.json", %{role: role}) do
+    %{
+      projects: render_many(role.projects, PmApiWeb.ProjectView, "project.json"),
+      users: render_many(role.users, PmApiWeb.UserView, "user_simple.json")
+    }
   end
 end

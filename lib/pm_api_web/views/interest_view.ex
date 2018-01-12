@@ -15,7 +15,10 @@ defmodule PmApiWeb.InterestView do
       name: interest.name}
   end
 
-  def render("interest_projonly.json", %{interest: interest}) do
-    %{projects: render_many(interest.projects, PmApiWeb.ProjectView, "project.json")}
+  def render("interest_connections.json", %{interest: interest}) do
+    %{
+      projects: render_many(interest.projects, PmApiWeb.ProjectView, "project.json"),
+      users: render_many(interest.users, PmApiWeb.UserView, "user_simple.json")
+    }
   end
 end

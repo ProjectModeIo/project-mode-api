@@ -22,8 +22,13 @@ defmodule PmApi.Projectmode.User do
     has_many :projects, PmApi.Projectmode.Project
     has_many :comments, PmApi.Projectmode.Comment
     has_many :watchedprojects, PmApi.Projectmode.Watchedproject
-    # many_to_many :roles, PmApi.Projectmode.Role, join_through: "userroles"
-    # many_to_many :skills, PmApi.Projectmode.Skill, join_through: "userskills"
+
+    has_many :notifications, PmApi.Chat.Notification
+
+    many_to_many :teams, PmApi.Network.Team, join_through: PmApi.Network.Teammember
+    many_to_many :roles, PmApi.Projectmode.Role, join_through: PmApi.Projectmode.Userrole
+    many_to_many :skills, PmApi.Projectmode.Skill, join_through: PmApi.Projectmode.Userskill
+    many_to_many :interests, PmApi.Projectmode.Interest, join_through: PmApi.Projectmode.Userinterest
 
     timestamps()
   end

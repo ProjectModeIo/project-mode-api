@@ -2,15 +2,11 @@ require IEx
 defmodule PmApiWeb.Github do
   use HTTPotion.Base
 
-  @github_user_agent System.get_env("GITHUB_USER_AGENT")
-  @github_client_id System.get_env("GITHUB_CLIENT_ID")
-  @github_client_secret System.get_env("GITHUB_CLIENT_SECRET")
-
   def get_access_token(%{ code: session_code }) do
     endpoint = "https://github.com/login/oauth/access_token"
     data = [
-      query: %{client_id: @github_client_id, client_secret: @github_client_secret, code: session_code},
-      headers: ["User-Agent": @github_user_agent, "Accept": "application/json"]
+      query: %{client_id: System.get_env("GITHUB_CLIENT_ID"), client_secret: System.get_env("GITHUB_CLIENT_SECRET"), code: session_code},
+      headers: ["User-Agent": System.get_env("GITHUB_USER_AGENT"), "Accept": "application/json"]
     ]
 
     case HTTPotion.post(endpoint, data) do
@@ -36,7 +32,7 @@ defmodule PmApiWeb.Github do
   def get_user_info(access_token) do
     data = [
       query: %{ "access_token" => access_token},
-      headers: ["User-Agent": @github_user_agent]
+      headers: ["User-Agent": System.get_env("GITHUB_USER_AGENT")]
     ]
 
     case HTTPotion.get("https://api.github.com/user", data) do
@@ -60,8 +56,8 @@ defmodule PmApiWeb.Github do
     endpoint = "https://api.github.com/repos/" <> githubuser <> "/" <> repo <> "/commits"
 
     body = [
-      query: %{client_id: @github_client_id, client_secret: @github_client_secret},
-      headers: ["User-Agent": @github_user_agent]
+      query: %{client_id: System.get_env("GITHUB_CLIENT_ID"), client_secret: System.get_env("GITHUB_CLIENT_SECRET")},
+      headers: ["User-Agent": System.get_env("GITHUB_USER_AGENT")]
     ]
 
     case HTTPotion.get(endpoint, body) do

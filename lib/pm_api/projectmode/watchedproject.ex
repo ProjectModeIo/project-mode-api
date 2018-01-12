@@ -20,5 +20,6 @@ defmodule PmApi.Projectmode.Watchedproject do
     |> cast(attrs, [:interestlevel, :user_id, :project_id])
     |> validate_required([:interestlevel, :user_id, :project_id])
     |> validate_inclusion(:interestlevel, -1..1)
+    |> unique_constraint(:user_id_project_id)
   end
 end

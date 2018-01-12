@@ -13,6 +13,26 @@ defmodule PmApiWeb.WatchedprojectView do
   def render("watchedproject.json", %{watchedproject: watchedproject}) do
     %{id: watchedproject.id,
       interestlevel: watchedproject.interestlevel,
+      user_id: watchedproject.user_id,
+      project_id: watchedproject.project_id
+    }
+  end
+
+  def render("watchedproject_user.json", %{watchedproject: watchedproject}) do
+    %{id: watchedproject.id,
+      interestlevel: watchedproject.interestlevel,
+      user_id: watchedproject.user_id,
+      project_id: watchedproject.project_id,
+      username: watchedproject.user.username
+    }
+  end
+
+  def render("watchedproject_project.json", %{watchedproject: watchedproject}) do
+    %{id: watchedproject.id,
+      interestlevel: watchedproject.interestlevel,
+      user_id: watchedproject.user_id,
+      project_id: watchedproject.project_id,
+      project: render_one(watchedproject.project, PmApiWeb.ProjectView, "project.json")
     }
   end
 end

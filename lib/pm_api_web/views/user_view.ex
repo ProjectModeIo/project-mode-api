@@ -41,6 +41,19 @@ defmodule PmApiWeb.UserView do
     %{data: render_one(user, UserView, "user.json")}
   end
 
+  def render("watcher.json", %{user: user}) do
+    %{
+
+    }
+  end
+
+  def render("user_simple.json", %{user: user}) do
+    %{
+      id: user.id,
+      username: user.username
+    }
+  end
+
   def render("user.json", %{user: user}) do
     # IEx.pry
     # user = user |> PmApi.Repo.preload([:projects, :userroles, :userinterests, :userskills, :account])
@@ -51,6 +64,7 @@ defmodule PmApiWeb.UserView do
       firstname: user.firstname,
       lastname: user.lastname,
       tagline: user.tagline,
+      watched_projects: render_many(user.watchedprojects, PmApiWeb.WatchedprojectView, "watchedproject_project.json"),
       created_projects: render_many(user.projects, PmApiWeb.ProjectView, "project.json"),
       github_account_info: render_one(user.account, PmApiWeb.AccountView, "account.json"),
       roles: render_many(user.userroles, PmApiWeb.UserroleView, "userrole.json"),

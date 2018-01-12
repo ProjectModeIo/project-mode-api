@@ -4,6 +4,7 @@ defmodule PmApiWeb.CommentController do
 
   alias PmApi.Projectmode
   alias PmApi.Projectmode.Comment
+  alias PmApiWeb.NotificationController
 
   action_fallback PmApiWeb.FallbackController
 
@@ -17,6 +18,9 @@ defmodule PmApiWeb.CommentController do
       {:ok, current_user} ->
         comment_params = Map.put(comment_params, "commenter_id", current_user.id)
         with {:ok, %Comment{} = comment} <- Projectmode.create_comment(comment_params) do
+          #move notification out
+          NotificationController.notify(comment, current_user)
+
           conn
           |> put_status(:created)
           |> render("show.json", comment: comment |> PmApi.Projectmode.comment_preloads())

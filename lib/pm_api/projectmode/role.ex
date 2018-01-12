@@ -12,7 +12,7 @@ defmodule PmApi.Projectmode.Role do
     belongs_to :channel, PmApi.Projectmode.Channel
 
     many_to_many :projects, PmApi.Projectmode.Project, join_through: PmApi.Projectmode.Projectrole
-    # many_to_many :users, PmApi.Projectmode.User, join_through: "userroles"
+    many_to_many :users, PmApi.Projectmode.User, join_through: PmApi.Projectmode.Userrole
 
     timestamps()
   end

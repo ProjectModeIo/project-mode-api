@@ -71,23 +71,27 @@ defmodule PmApi.Projectmode do
 
   def list_projects do
     Repo.all(Project)
-    |> Repo.preload([
-      :user, #:watchedprojects,
-      projectroles: [:role],
-      projectskills: [:skill],
-      projectinterests: [:interest],
-      comments: [:user]])
+    |> project_preloads()
+    # |> Repo.preload([
+    #   :user,
+    #   watchedprojects: [ :user ],
+    #   projectroles: [:role],
+    #   projectskills: [:skill],
+    #   projectinterests: [:interest],
+    #   comments: [:user]])
   end
 
   def list_projects(query) do
     query
     |> Repo.all()
-    |> Repo.preload([
-      :user,
-      projectroles: [:role],
-      projectskills: [:skill],
-      projectinterests: [:interest],
-      comments: [:user]])
+    |> project_preloads()
+    # |> Repo.preload([
+    #   :user,
+    #   watchedprojects: [ :user ],
+    #   projectroles: [:role],
+    #   projectskills: [:skill],
+    #   projectinterests: [:interest],
+    #   comments: [:user]])
   end
 
   def get_project!(id) do
@@ -95,13 +99,24 @@ defmodule PmApi.Projectmode do
     |> Repo.preload([:user])
   end
 
+  def get_project_by(params) do
+    case Repo.get_by(Project, params) do
+      %Project{} = project -> {:ok, project}
+      _ -> {:error, :not_found}
+    end
+  end
+
   def get_project_by_slug(username, slug) do
     query = from p in Project,
       join: u in assoc(p, :user),
       where: p.slug == ^slug and u.username == ^username
 
-    Repo.one(query)
-    |> Repo.preload([:user])
+    case Repo.one(query) |> Repo.preload([:user]) do
+      %Project{} = project ->
+        {:ok, project}
+      _ ->
+        {:error, :not_found}
+    end
     #
     # project = Repo.get_by(Project, %{slug: slug})
     # |> Repo.preload([:user])
@@ -125,90 +140,6 @@ defmodule PmApi.Projectmode do
 
   def change_project(%Project{} = project) do
     Project.changeset(project, %{})
-  end
-
-  alias PmApi.Projectmode.Team
-
-  def list_teams do
-    Repo.all(Team)
-  end
-
-  def get_team!(id), do: Repo.get!(Team, id)
-
-  def create_team(attrs \\ %{}) do
-    %Team{}
-    |> Team.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def update_team(%Team{} = team, attrs) do
-    team
-    |> Team.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_team(%Team{} = team) do
-    Repo.delete(team)
-  end
-
-  def change_team(%Team{} = team) do
-    Team.changeset(team, %{})
-  end
-
-  alias PmApi.Projectmode.Teammember
-
-  def list_teammembers do
-    Repo.all(Teammember)
-  end
-
-  def get_teammember!(id), do: Repo.get!(Teammember, id)
-
-  def create_teammember(attrs \\ %{}) do
-    %Teammember{}
-    |> Teammember.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def update_teammember(%Teammember{} = teammember, attrs) do
-    teammember
-    |> Teammember.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_teammember(%Teammember{} = teammember) do
-    Repo.delete(teammember)
-  end
-
-  def change_teammember(%Teammember{} = teammember) do
-    Teammember.changeset(teammember, %{})
-  end
-
-  alias PmApi.Projectmode.Teamproject
-
-  def list_teamprojects do
-    Repo.all(Teamproject)
-  end
-
-  def get_teamproject!(id), do: Repo.get!(Teamproject, id)
-
-  def create_teamproject(attrs \\ %{}) do
-    %Teamproject{}
-    |> Teamproject.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def update_teamproject(%Teamproject{} = teamproject, attrs) do
-    teamproject
-    |> Teamproject.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_teamproject(%Teamproject{} = teamproject) do
-    Repo.delete(teamproject)
-  end
-
-  def change_teamproject(%Teamproject{} = teamproject) do
-    Teamproject.changeset(teamproject, %{})
   end
 
   alias PmApi.Projectmode.Role
@@ -444,6 +375,16 @@ defmodule PmApi.Projectmode do
 
   alias PmApi.Projectmode.Watchedproject
 
+  def create_or_update_watchedproject(params_obj) do
+    # IEx.pry
+    case Repo.get_by(Watchedproject, %{project_id: params_obj["project_id"],user_id: params_obj["user_id"]}) do
+      %Watchedproject{} = watchedproject ->
+        update_watchedproject(watchedproject, params_obj)
+      _ ->
+        create_watchedproject(params_obj)
+    end
+  end
+
   def list_watchedprojects do
     Repo.all(Watchedproject)
   end
@@ -591,8 +532,21 @@ defmodule PmApi.Projectmode do
   def user_preloads(%User{} = user) do
     user |> Repo.preload([
       :account,
+      watchedprojects: [
+        project: [
+          :user,
+          watchedprojects: [ :user ],
+          volunteers: [ user: [:skills] ],
+          projectroles: [:role],
+          projectskills: [:skill],
+          projectinterests: [:interest],
+          comments: [:user]
+        ]
+      ],
       projects: [
-        :user, #:watchedprojects,
+        :user,
+        watchedprojects: [ :user ],
+        volunteers: [ user: [:skills] ],
         projectroles: [:role],
         projectskills: [:skill],
         projectinterests: [:interest],
@@ -604,9 +558,11 @@ defmodule PmApi.Projectmode do
       ])
   end
 
-  def project_preloads(%Project{} = project) do
-    project |> Repo.preload([
-      :user, #:watchedprojects,
+  def project_preloads(query) do
+    query |> Repo.preload([
+      :user,
+      watchedprojects: [:user],
+      volunteers: [ user: [:skills] ],
       projectroles: [:role],
       projectskills: [:skill],
       projectinterests: [:interest],
@@ -614,11 +570,14 @@ defmodule PmApi.Projectmode do
     ])
   end
 
-  def channel_preloads(%Channel{} = channel) do
-    channel |> Repo.preload([
+  def channel_preloads(query) do
+    query |> Repo.preload([
       role: [
+        :users,
         projects: [
-          :user, #:watchedprojects,
+          :user,
+          watchedprojects: [ :user ],
+          volunteers: [ user: [:skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -626,8 +585,11 @@ defmodule PmApi.Projectmode do
         ]
       ],
       skill: [
+        :users,
         projects: [
-          :user, #:watchedprojects,
+          :user,
+          watchedprojects: [ :user ],
+          volunteers: [ user: [:skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -635,8 +597,11 @@ defmodule PmApi.Projectmode do
         ]
       ],
       interest: [
+        :users,
         projects: [
-          :user, #:watchedprojects,
+          :user,
+          watchedprojects: [ :user ],
+          volunteers: [ user: [:skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -648,5 +613,48 @@ defmodule PmApi.Projectmode do
 
   def comment_preloads(%Comment{} = comment) do
     comment |> Repo.preload([:user])
+  end
+
+  alias PmApi.Chat.Notification
+  #create notifications
+  def create_notification(%Project{} = project, current_user) do
+    # notifiy project's owner
+  end
+
+  def create_notification(%PmApi.Network.Volunteer{} = volunteer, current_user) do
+    volunteer = volunteer |> Repo.preload([project: [:user]])
+    create_notification(%{user_id: volunteer.project.user.id,
+      message: volunteer.project.user.username <> " has volunteered for " <> volunteer.project.title,
+      link: volunteer.project.slug
+    }, current_user)
+  end
+
+  def create_notification(%Comment{} = comment, current_user) do
+    # notifiy comment's parent user, if no parent, notify project owner
+    comment = comment |> Repo.preload([:user, parent: [:user], project: [:user]])
+    case {comment.parent, comment.project} do
+      {%Comment{} = parent, _} ->
+        create_notification(%{
+          user_id: parent.user.id,
+          message: comment.user.username <> " replied to our comment.",
+          link: "something"
+        }, current_user)
+      {_, %Project{} = project} ->
+        create_notification(%{
+          user_id: project.user.id,
+          message: comment.user.username <> " commented on " <> project.title,
+          link: project.slug
+        }, current_user)
+    end
+  end
+
+  def create_notification(%{user_id: user_id, message: message, link: link}, current_user) do
+    if user_id !== current_user.id do
+      PmApi.Chat.create_notification(%{user_id: user_id, message: message, link: link})
+    end
+  end
+
+  def delete_notifications(%User{} = user) do
+    from(n in Notification, where: n.user_id == ^user.id) |> Repo.delete_all
   end
 end

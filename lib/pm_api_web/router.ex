@@ -36,6 +36,7 @@ defmodule PmApiWeb.Router do
     resources "/roles", RoleController, only: [:index, :show]
     resources "/skills", SkillController, only: [:index, :show]
     resources "/interests", InterestController, only: [:index, :show]
+
     get "/projectslug/:username/:slug", ProjectController, :showslug
     get "/channelslug/:slug", ChannelController, :showslug
   end
@@ -60,10 +61,13 @@ defmodule PmApiWeb.Router do
     resources "/projectroles", ProjectroleController, only: [:create, :delete]
     resources "/projectskills", ProjectskillController, only: [:create, :delete]
     resources "/projectinterests", ProjectinterestController, only: [:create, :delete]
-
+    resources "/watchedprojects", WatchedprojectController, only: [:create]
+    resources "/volunteers", VolunteerController, only: [:create, :delete]
     #comments
     resources "/comments", CommentController, only: [:create]
 
+    #notifications
+    delete "/clear_all_notifications", NotificationController, :delete_all
     #link stuff like github
     post "/github_callback", GithubController, :github_callback
     # resources "/github", RepoController, only: [:create, :delete, :show, :update]

@@ -3,6 +3,7 @@ defmodule PmApiWeb.UserSocket do
 
   ## Channels
   channel "rooms:*", PmApiWeb.RoomChannel
+  channel "user:*", PmApiWeb.NotificationChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket,

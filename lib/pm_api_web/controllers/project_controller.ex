@@ -36,8 +36,9 @@ defmodule PmApiWeb.ProjectController do
   end
 
   def showslug(conn, %{"slug" => slug, "username" => username}) do
-    project = Projectmode.get_project_by_slug(username, slug)
-    render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
+    with {:ok, %Project{} = project} <- Projectmode.get_project_by_slug(username, slug) do
+      render(conn, "show.json", project: project |> PmApi.Projectmode.project_preloads())
+    end
   end
 
   def update(conn, %{"id" => id, "project" => project_params}) do
