@@ -14,7 +14,7 @@ defmodule PmApi.Projectmode.User do
     field :password_hash, :string
     field :tagline, :string
     field :contact_info, :string
-    has_one :account, PmApi.Github.Account
+    has_one :account, PmApi.Profile.Account
     has_many :userroles, PmApi.Projectmode.Userrole
     has_many :userskills, PmApi.Projectmode.Userskill
     has_many :userinterests, PmApi.Projectmode.Userinterest
@@ -22,6 +22,7 @@ defmodule PmApi.Projectmode.User do
     has_many :projects, PmApi.Projectmode.Project
     has_many :comments, PmApi.Projectmode.Comment
     has_many :watchedprojects, PmApi.Projectmode.Watchedproject
+    has_many :volunteers, PmApi.Network.Volunteer
 
     has_many :notifications, PmApi.Chat.Notification
 

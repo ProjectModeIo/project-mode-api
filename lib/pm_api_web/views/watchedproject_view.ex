@@ -1,3 +1,4 @@
+require IEx
 defmodule PmApiWeb.WatchedprojectView do
   use PmApiWeb, :view
   alias PmApiWeb.WatchedprojectView
@@ -14,7 +15,10 @@ defmodule PmApiWeb.WatchedprojectView do
     %{id: watchedproject.id,
       interestlevel: watchedproject.interestlevel,
       user_id: watchedproject.user_id,
-      project_id: watchedproject.project_id
+      project_id: watchedproject.project_id,
+      username: watchedproject.user.username,
+      account: render_one(watchedproject.user.account, PmApiWeb.AccountView, "account.json"),
+      project: render_one(watchedproject.project, PmApiWeb.ProjectView, "project.json")
     }
   end
 
@@ -23,7 +27,8 @@ defmodule PmApiWeb.WatchedprojectView do
       interestlevel: watchedproject.interestlevel,
       user_id: watchedproject.user_id,
       project_id: watchedproject.project_id,
-      username: watchedproject.user.username
+      username: watchedproject.user.username,
+      account: render_one(watchedproject.user.account, PmApiWeb.AccountView, "account.json"),
     }
   end
 

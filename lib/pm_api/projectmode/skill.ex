@@ -21,7 +21,7 @@ defmodule PmApi.Projectmode.Skill do
     skills
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> validate_format(:name, ~r/^[a-zA-Z ]+$/)
+    |> validate_format(:name, ~r/^[a-zA-Z0-9 ]+$/)
     |> unique_constraint(:name)
     |> put_assoc(:channel, insert_channel(attrs[:name] || attrs["name"]))
   end

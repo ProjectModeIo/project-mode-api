@@ -13,6 +13,7 @@ defmodule PmApiWeb.AccountView do
 
   def render("account.json", %{account: account}) do
     %{id: account.id,
-      user_info_json: account.user_info_json}
+      avatar_url: account.avatar_url,
+      github_info_json: account.github_info_json}
   end
 end

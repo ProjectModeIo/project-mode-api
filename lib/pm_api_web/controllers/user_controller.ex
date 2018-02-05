@@ -5,8 +5,10 @@ defmodule PmApiWeb.UserController do
 
   alias PmApi.Projectmode
   alias PmApi.Projectmode.User
+  alias PmApi.Profile
   alias PmApiWeb.Guardian
 
+  @default_avatar "https://220images.mrowl.com/default-user-profile-photo.png"
   action_fallback PmApiWeb.FallbackController
 
   def index(conn, _params) do
@@ -18,6 +20,7 @@ defmodule PmApiWeb.UserController do
     # changeset = User.registration_changeset(%User{}, user_params)
     case Projectmode.create_user(user_params) do
       {:ok, user} ->
+        Profile.create_or_update_account(user, %{avatar_url: "https://220images.mrowl.com/default-user-profile-photo.png"}) # create account - maybe move to changeset?
         # user = user |> PmApi.Repo.preload([:userroles, :userskills, :userinterests])
         new_conn = Guardian.Plug.sign_in(conn, user)
         jwt = Guardian.Plug.current_token(new_conn)

@@ -74,7 +74,7 @@ defmodule PmApi.Projectmode do
     |> project_preloads()
     # |> Repo.preload([
     #   :user,
-    #   watchedprojects: [ :user ],
+    #   watchedprojects: [ user: [:account] ],
     #   projectroles: [:role],
     #   projectskills: [:skill],
     #   projectinterests: [:interest],
@@ -87,7 +87,7 @@ defmodule PmApi.Projectmode do
     |> project_preloads()
     # |> Repo.preload([
     #   :user,
-    #   watchedprojects: [ :user ],
+    #   watchedprojects: [ user: [:account] ],
     #   projectroles: [:role],
     #   projectskills: [:skill],
     #   projectinterests: [:interest],
@@ -130,7 +130,7 @@ defmodule PmApi.Projectmode do
 
   def update_project(%Project{} = project, attrs) do
     project
-    |> Project.changeset(attrs)
+    |> Project.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -535,8 +535,19 @@ defmodule PmApi.Projectmode do
       watchedprojects: [
         project: [
           :user,
-          watchedprojects: [ :user ],
-          volunteers: [ user: [:skills] ],
+          watchedprojects: [ user: [:account] ],
+          volunteers: [ user: [:account, :skills] ],
+          projectroles: [:role],
+          projectskills: [:skill],
+          projectinterests: [:interest],
+          comments: [:user]
+        ]
+      ],
+      volunteers: [
+        project: [
+          :user,
+          watchedprojects: [ user: [:account] ],
+          volunteers: [ user: [:account, :skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -545,8 +556,8 @@ defmodule PmApi.Projectmode do
       ],
       projects: [
         :user,
-        watchedprojects: [ :user ],
-        volunteers: [ user: [:skills] ],
+        watchedprojects: [ user: [:account] ],
+        volunteers: [ user: [:account, :skills] ],
         projectroles: [:role],
         projectskills: [:skill],
         projectinterests: [:interest],
@@ -558,11 +569,41 @@ defmodule PmApi.Projectmode do
       ])
   end
 
+  def watchedproject_preload(query) do
+    query |> Repo.preload([
+      user: [:account],
+      project: [
+        :user,
+        watchedprojects: [ user: [:account] ],
+        volunteers: [ user: [:account, :skills] ],
+        projectroles: [:role],
+        projectskills: [:skill],
+        projectinterests: [:interest],
+        comments: [:user]
+      ]
+    ])
+  end
+
+  def volunteerproject_preload(query) do
+    query |> Repo.preload([
+      user: [:account, :skills],
+      project: [
+        :user,
+        watchedprojects: [ user: [:account] ],
+        volunteers: [ user: [:account, :skills] ],
+        projectroles: [:role],
+        projectskills: [:skill],
+        projectinterests: [:interest],
+        comments: [:user]
+      ]
+    ])
+  end
+
   def project_preloads(query) do
     query |> Repo.preload([
       :user,
-      watchedprojects: [:user],
-      volunteers: [ user: [:skills] ],
+      watchedprojects: [ user: [:account]],
+      volunteers: [ user: [:account, :skills] ],
       projectroles: [:role],
       projectskills: [:skill],
       projectinterests: [:interest],
@@ -576,8 +617,8 @@ defmodule PmApi.Projectmode do
         :users,
         projects: [
           :user,
-          watchedprojects: [ :user ],
-          volunteers: [ user: [:skills] ],
+          watchedprojects: [ user: [:account] ],
+          volunteers: [ user: [:account, :skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -588,8 +629,8 @@ defmodule PmApi.Projectmode do
         :users,
         projects: [
           :user,
-          watchedprojects: [ :user ],
-          volunteers: [ user: [:skills] ],
+          watchedprojects: [ user: [:account] ],
+          volunteers: [ user: [:account, :skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -600,8 +641,8 @@ defmodule PmApi.Projectmode do
         :users,
         projects: [
           :user,
-          watchedprojects: [ :user ],
-          volunteers: [ user: [:skills] ],
+          watchedprojects: [ user: [:account] ],
+          volunteers: [ user: [:account, :skills] ],
           projectroles: [:role],
           projectskills: [:skill],
           projectinterests: [:interest],
@@ -616,21 +657,20 @@ defmodule PmApi.Projectmode do
   end
 
   alias PmApi.Chat.Notification
-  #create notifications
+
   def create_notification(%Project{} = project, current_user) do
     # notifiy project's owner
   end
 
   def create_notification(%PmApi.Network.Volunteer{} = volunteer, current_user) do
-    volunteer = volunteer |> Repo.preload([project: [:user]])
+    volunteer = volunteer |> Repo.preload([:user, project: [:user]])
     create_notification(%{user_id: volunteer.project.user.id,
-      message: volunteer.project.user.username <> " has volunteered for " <> volunteer.project.title,
+      message: volunteer.user.username <> " has volunteered for " <> volunteer.project.title,
       link: volunteer.project.slug
     }, current_user)
   end
 
   def create_notification(%Comment{} = comment, current_user) do
-    # notifiy comment's parent user, if no parent, notify project owner
     comment = comment |> Repo.preload([:user, parent: [:user], project: [:user]])
     case {comment.parent, comment.project} do
       {%Comment{} = parent, _} ->

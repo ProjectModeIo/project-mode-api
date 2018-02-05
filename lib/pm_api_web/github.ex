@@ -23,8 +23,8 @@ defmodule PmApiWeb.Github do
   end
 
   def get_access_token(%PmApi.Projectmode.User{} = user) do
-    case PmApi.Github.get_account_by(%{user_id: user.id}) do
-      %PmApi.Github.Account{} = account -> {:ok, account.access_token}
+    case PmApi.Profile.get_account_by(%{user_id: user.id}) do
+      %PmApi.Profile.Account{} = account -> {:ok, account.access_token}
       _ -> {:error, :not_found}
     end
   end
@@ -40,6 +40,29 @@ defmodule PmApiWeb.Github do
         {:ok, body} = Poison.decode(response.body)
         if response.status_code == 200 and body["error"] == nil do
           {:ok, body}
+        else
+          {:error, :not_found}
+        end
+      %HTTPotion.ErrorResponse{} = error ->
+        IEx.pry
+        {:error, error}
+    end
+  end
+
+  def get_user_repos(%{github_user: github_user, github_access_token: github_access_token}) do
+    data = [
+      query: %{ "access_token" => github_access_token},
+      headers: ["User-Agent": System.get_env("GITHUB_USER_AGENT")]
+    ]
+
+    case HTTPotion.get("https://api.github.com/users/"<>github_user<>"/repos", data) do
+      %HTTPotion.Response{} = response ->
+        {:ok, body} = Poison.decode(response.body)
+        if response.status_code == 200 do
+          {:ok, %{
+            body: body,
+            links: response.headers["link"]
+          }}
         else
           {:error, :not_found}
         end

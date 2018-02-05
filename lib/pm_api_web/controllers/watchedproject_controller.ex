@@ -9,7 +9,7 @@ defmodule PmApiWeb.WatchedprojectController do
 
   def index(conn, _params) do
     watchedprojects = Projectmode.list_watchedprojects()
-    render(conn, "index.json", watchedprojects: watchedprojects)
+    render(conn, "index.json", watchedprojects: watchedprojects |> Projectmode.watchedproject_preload)
   end
 
   def create(conn, %{"watchedproject" => watchedproject_params}) do
@@ -17,20 +17,20 @@ defmodule PmApiWeb.WatchedprojectController do
       conn
       |> put_status(:created)
       # |> put_resp_header("location", watchedproject_path(conn, :show, watchedproject))
-      |> render("show.json", watchedproject: watchedproject)
+      |> render("show.json", watchedproject: watchedproject |> Projectmode.watchedproject_preload)
     end
   end
 
   def show(conn, %{"id" => id}) do
     watchedproject = Projectmode.get_watchedproject!(id)
-    render(conn, "show.json", watchedproject: watchedproject)
+    render(conn, "show.json", watchedproject: watchedproject |> Projectmode.watchedproject_preload)
   end
 
   def update(conn, %{"id" => id, "watchedproject" => watchedproject_params}) do
     watchedproject = Projectmode.get_watchedproject!(id)
 
     with {:ok, %Watchedproject{} = watchedproject} <- Projectmode.update_watchedproject(watchedproject, watchedproject_params) do
-      render(conn, "show.json", watchedproject: watchedproject)
+      render(conn, "show.json", watchedproject: watchedproject |> Projectmode.watchedproject_preload)
     end
   end
 

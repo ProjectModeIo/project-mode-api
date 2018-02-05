@@ -30,7 +30,7 @@ defmodule PmApiWeb.UserView do
       lastname: user.lastname,
       tagline: user.tagline,
       created_projects: render_many(user.projects, PmApiWeb.ProjectView, "project.json"),
-      github_account_info: render_one(user.account, PmApiWeb.AccountView, "account.json"),
+      account: render_one(user.account, PmApiWeb.AccountView, "account.json"),
       roles: render_many(user.userroles, PmApiWeb.UserroleView, "userrole.json"),
       skills: render_many(user.userskills, PmApiWeb.UserskillView, "userskill.json"),
       interests: render_many(user.userinterests, PmApiWeb.UserinterestView, "userinterest.json")
@@ -64,7 +64,9 @@ defmodule PmApiWeb.UserView do
       firstname: user.firstname,
       lastname: user.lastname,
       tagline: user.tagline,
+      account: render_one(user.account, PmApiWeb.AccountView, "account.json"),
       watched_projects: render_many(user.watchedprojects, PmApiWeb.WatchedprojectView, "watchedproject_project.json"),
+      volunteer_projects: render_many(user.volunteers, PmApiWeb.VolunteerView, "volunteer_project.json"),
       created_projects: render_many(user.projects, PmApiWeb.ProjectView, "project.json"),
       github_account_info: render_one(user.account, PmApiWeb.AccountView, "account.json"),
       roles: render_many(user.userroles, PmApiWeb.UserroleView, "userrole.json"),

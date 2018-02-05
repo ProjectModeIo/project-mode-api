@@ -23,7 +23,7 @@ defmodule PmApiWeb.VolunteerController do
             PmApiWeb.NotificationController.notify(volunteer, current_user)
             conn
             |> put_status(:created)
-            |> render("show.json", volunteer: volunteer |> PmApi.Repo.preload([user: [:skills]])) #make volunteer_preloads
+            |> render("show.json", volunteer: volunteer |> Projectmode.volunteerproject_preload()) #make volunteer_preloads
           end
         end
       _ ->

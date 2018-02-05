@@ -1,15 +1,15 @@
 defmodule PmApiWeb.AccountControllerTest do
   use PmApiWeb.ConnCase
 
-  alias PmApi.Github
-  alias PmApi.Github.Account
+  alias PmApi.Profile
+  alias PmApi.Profile.Account
 
   @create_attrs %{commits_json: "some commits_json", organizations_json: "some organizations_json", projects_json: "some projects_json", totalcommits: 42, totalorganizations: 42, totalprojects: 42}
   @update_attrs %{commits_json: "some updated commits_json", organizations_json: "some updated organizations_json", projects_json: "some updated projects_json", totalcommits: 43, totalorganizations: 43, totalprojects: 43}
   @invalid_attrs %{commits_json: nil, organizations_json: nil, projects_json: nil, totalcommits: nil, totalorganizations: nil, totalprojects: nil}
 
   def fixture(:account) do
-    {:ok, account} = Github.create_account(@create_attrs)
+    {:ok, account} = Profile.create_account(@create_attrs)
     account
   end
 

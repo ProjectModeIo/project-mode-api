@@ -11,8 +11,10 @@ defmodule PmApiWeb.SkillView do
   end
 
   def render("skill.json", %{skill: skill}) do
-    %{id: skill.id,
-      name: skill.name}
+    %{
+      id: skill.id,
+      name: skill.name
+    }
   end
 
   def render("skill_connections.json", %{skill: skill}) do

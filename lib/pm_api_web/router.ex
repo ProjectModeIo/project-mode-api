@@ -17,16 +17,9 @@ defmodule PmApiWeb.Router do
     plug PmApiWeb.Guardian.AuthPipeline
   end
 
-  # scope "/", PmApiWeb do
-  #   pipe_through :browser # Use the default browser stack
-  #
-  #   get "/", PageController, :index
-  # end
-
-  # Other scopes may use custom stacks.
   scope "/api/v1", PmApiWeb do
     pipe_through [:api]
-
+    get "/track.gif", SessionController, :track
     post "/validate", UserController, :validate #validate unique constraints
     post "/sessions", SessionController, :create #login
     get "/load", SessionController, :load #loadAllThings in react app
@@ -69,7 +62,8 @@ defmodule PmApiWeb.Router do
     #notifications
     delete "/clear_all_notifications", NotificationController, :delete_all
     #link stuff like github
-    post "/github_callback", GithubController, :github_callback
+    post "/github_callback", ProfileController, :github_callback
+    post "/github-link-repo", ProfileController, :linkrepository
     # resources "/github", RepoController, only: [:create, :delete, :show, :update]
 
   end

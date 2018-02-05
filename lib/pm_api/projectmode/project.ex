@@ -12,7 +12,6 @@ defmodule PmApi.Projectmode.Project do
     field :title, :string
     field :slug, :string
     field :project_scope, :string
-    field :github_owner, :string
     field :github_repo, :string
     field :active, :boolean
     field :status, :string
@@ -37,7 +36,7 @@ defmodule PmApi.Projectmode.Project do
   @doc false
   def changeset(%Project{} = project, attrs) do
     project
-    |> cast(attrs, [:title, :description, :user_id, :team_id, :project_scope, :github_owner, :github_repo, :active])
+    |> cast(attrs, [:title, :description, :user_id, :team_id, :project_scope, :github_repo, :active])
     |> validate_required([:title, :description, :user_id])
     |> validate_inclusion(:project_scope, ["passion project","experiment","business opportunity","just for fun","learning opportunity"])
     |> validate_exclusion(:title, ["profile","edit","new","delete","dashboard"])
@@ -47,6 +46,17 @@ defmodule PmApi.Projectmode.Project do
     |> put_assoc(:roles, parse_list(attrs[:roles] || attrs["roles"], PmApi.Projectmode.Role))
     |> put_assoc(:skills, parse_list(attrs[:skills] || attrs["skills"], PmApi.Projectmode.Skill))
     |> put_assoc(:interests, parse_list(attrs[:interests] || attrs["interests"], PmApi.Projectmode.Interest))
+  end
+
+  def update_changeset(%Project{} = project, attrs) do
+    project
+    |> cast(attrs, [:title, :description, :user_id, :team_id, :project_scope, :github_repo, :active])
+    |> validate_required([:title, :description, :user_id])
+    |> validate_inclusion(:project_scope, ["passion project","experiment","business opportunity","just for fun","learning opportunity"])
+    |> validate_exclusion(:title, ["profile","edit","new","delete","dashboard"])
+    |> create_slug_from_title()
+    |> unique_constraint(:user_id_slug)
+    |> unique_constraint(:user_id_title)
   end
 
   defp parse_list(attrs, schema) do

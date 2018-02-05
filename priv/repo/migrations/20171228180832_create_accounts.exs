@@ -4,7 +4,7 @@ defmodule PmApi.Repo.Migrations.CreateAccounts do
   def change do
     create table(:accounts) do
       add :access_token, :string
-      add :user_info_json, :text
+      add :github_info_json, :text #maybe change to github_info_json
       add :projects_json, :text
       add :commits_json, :text
       add :organizations_json, :text
